@@ -1,0 +1,27 @@
+---
+- hosts: "{{ target + '_glusterfs_nodes'}}"
+  tasks:
+    - name: Set fact for Glusterfs Primary node
+      set_fact:
+        gluster_leader: "{{ groups[target+'_glusterfs_nodes'][0] }}"
+
+    - name: Set fact for Glusterfs agents
+      set_fact:
+        gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][0] }}"
+
+    - name: Create a partition
+      parted:
+        device: "{{ gluster_fs_disk }}"
+        number: "{{ partition_number }}"
+        state: present
+        part_end: "{{ partition_size }}"
+
+    - name: Create xfs filesystem on partition
+      filesystem:
+        fstype: xfs
+        dev: {{ gluster_fs_disk }}
+        opts: -i size=512
+
+
+
+
