@@ -1,2 +1,2 @@
 ---
-include: glusterfs_node.yml
+- include: glusterfs_node.yml

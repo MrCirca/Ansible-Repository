@@ -1,1 +1,6 @@
-
+---
+- hosts: "{{ target + '_glusterfs_nodes' }}"
+  roles:
+    - glusterfs
+  tags:
+    - glusterfs

@@ -1,27 +1,52 @@
 ---
-- hosts: "{{ target + '_glusterfs_nodes'}}"
-  tasks:
-    - name: Set fact for Glusterfs Primary node
-      set_fact:
-        gluster_leader: "{{ groups[target+'_glusterfs_nodes'][0] }}"
+- name: Set fact for Glusterfs Primary node
+  set_fact:
+    gluster_leader: "{{ groups[target+'_glusterfs_nodes'][0] }}"
 
-    - name: Set fact for Glusterfs agents
-      set_fact:
-        gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][0] }}"
+- name: Set fact for Glusterfs agents
+  set_fact:
+    gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
 
-    - name: Create a partition
-      parted:
-        device: "{{ gluster_fs_disk }}"
-        number: "{{ partition_number }}"
-        state: present
-        part_end: "{{ partition_size }}"
+- name: Comment proxmox enterprise repository
+  lineinfile:
+    dest: /etc/apt/sources.list.d/pve-enterprise.list
+    regexp: '^'
+    line: '#deb https://enterprise.proxmox.com/debian stretch pve-enterprise'
+    state: present
 
-    - name: Create xfs filesystem on partition
-      filesystem:
-        fstype: xfs
-        dev: {{ gluster_fs_disk }}
-        opts: -i size=512
+- name: Install GlusterFS server
+  apt:
+    name: glusterfs-server
+    state: present
 
+- name: Create partition
+  parted:
+    device: "/dev/{{ glusterfs_disk }}"
+    number: "{{ partition_number }}"
+    state: present
+    part_end: "{{ partition_size }}"
 
+- name: Create xfs filesystem on partition
+  filesystem:
+    fstype: xfs
+    dev: /dev/vda1
+    opts: -i size=512
 
+- name: Add entry to /etc/fstab
+  lineinfile:
+    path: /etc/fstab
+    line:  "/dev/{{glusterfs_disk}}{{partition_number}} /export/gluster_storage xfs defaults 0 0"
+
+- name: Create the directory
+  file:
+    path: /export/gluster_storage
+    state: directory
+
+- name: Mount 
+  shell: mount -a
+
+- name: Create brick's directory
+  file:
+    path: /export/gluster_storage/brick
+    state: directory
 
