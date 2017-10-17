@@ -1,0 +1,49 @@
+---
+- name: Add hosts to /etc/hosts for ip resolve
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+  tags: 
+    - resolve
+
+- name: Cat public keys for root
+  shell: cat /root/.ssh/id_rsa.pub
+  register: root_public_key
+  tags:
+    - ssh
+
+- name: Cat public keys for hosts
+  shell: cat /etc/ssh/ssh_host_rsa_key.pub
+  register: host_public_key
+  tags:
+    - ssh
+
+- name: Add authorized keys for root user
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ hostvars[item]['root_public_key']['stdout'] }}"
+  with_items: "{{ groups[target+'_glusterfs_nodes'] }}"
+  when: item != inventory_hostname
+  tags:
+    - ssh
+
+- name: Add host_public_key (IP) to known hosts
+  known_hosts:
+    name: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+    path: /root/.ssh/known_hosts
+    key: "{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ hostvars[item]['host_public_key']['stdout'] }}"
+  with_items: "{{ groups[target+'_glusterfs_nodes'] }}"
+  when: item != inventory_hostname
+  tags:
+    - ssh
+
+- name: Add host_public_key (short hostname) to known hosts
+  known_hosts:
+    name: "{{ hostvars[item]['inventory_hostname_short'] }}"
+    path: /root/.ssh/known_hosts
+    key: "{{ hostvars[item]['inventory_hostname_short'] }} {{ hostvars[item]['host_public_key']['stdout'] }}"
+  with_items: "{{ groups[target+'_glusterfs_nodes'] }}"
+  when: item != inventory_hostname
+  tags:
+    - ssh

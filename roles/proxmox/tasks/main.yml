@@ -1,0 +1,4 @@
+---
+- include: pub_key_exchange.yml
+- include: proxmox_cluster.yml
+- include: storage.yml

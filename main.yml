@@ -1,6 +1,13 @@
 ---
 - hosts: "{{ target + '_glusterfs_nodes' }}"
   roles:
-    - glusterfs
+    - role: proxmox
   tags:
-    - glusterfs
+    - proxmox
+
+#- hosts: "{{ target + '_glusterfs_nodes' }}"
+#  roles:
+#    - role: glusterfs
+#  tags:
+#    - glusterfs
+
