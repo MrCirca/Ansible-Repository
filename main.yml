@@ -5,9 +5,9 @@
   tags:
     - proxmox
 
-#- hosts: "{{ target + '_glusterfs_nodes' }}"
-#  roles:
-#    - role: glusterfs
-#  tags:
-#    - glusterfs
+- hosts: "{{ target + '_glusterfs_nodes' }}"
+  roles:
+    - role: glusterfs
+  tags:
+    - glusterfs
 

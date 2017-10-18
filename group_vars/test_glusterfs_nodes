@@ -1,3 +1,4 @@
 ---
 glusterfs_vg_name: glusterfs_vg
 glusterfs_storage: gluster_storage
+storage_directory: /export

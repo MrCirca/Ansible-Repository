@@ -1,15 +1,12 @@
 ---
-- name: Set fact for Glusterfs agents
+- name: Set fact for Glusterfs leader
   set_fact:
-    gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
+    gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][0] }}"
 
-- name: Comment proxmox enterprise repository
-  lineinfile:
-    gluster_leader: "{{ groups[target+'_glusterfs_nodes'][0] }}"
-
-- name: Set fact for Glusterfs agents
+- name: Set fact for Glusterfs nodes
   set_fact:
-    gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
+    gluster_leader: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
+
 - name: Create volume group
   lvg:
     vg: "{{ glusterfs_vg_name }}"
@@ -32,15 +29,17 @@
     fstype: xfs
     dev: "/dev/{{ glusterfs_vg_name }}/{{ glusterfs_storage }}"
     opts: -i size=512
+  register: create_fs
+  failed_when: "'failed' not in create_fs.msg"
 
 - name: Add entry to /etc/fstab
   lineinfile:
     path: /etc/fstab
-    line:  "/dev/{{ glusterfs_vg_name }}/{{ glusterfs_storage}} /export/gluster_storage xfs defaults 0 0"
+    line:  "/dev/{{ glusterfs_vg_name }}/{{ glusterfs_storage}} {{ storage_directory}}/{{ glusterfs_storage }} xfs defaults 0 0"
 
-- name: Create the directory
+- name: Create the storage directory
   file:
-    path: "/export/{{ glusterfs_storage }}"
+    path: "{{ storage_directory }}/{{ glusterfs_storage }}"
     state: directory
 
 - name: Mount the line added in fstab
@@ -48,6 +47,5 @@
 
 - name: Create brick's directory
   file:
-    path: /export/"{{glusterfs_storage}}"/brick
+    path: "{{ storage_directory}}/{{glusterfs_storage}}/brick"
     state: directory
-
