@@ -29,8 +29,8 @@
     fstype: xfs
     dev: "/dev/{{ glusterfs_vg_name }}/{{ glusterfs_storage }}"
     opts: -i size=512
-  register: create_fs
-  failed_when: "'failed' not in create_fs.msg"
+  ignore_errors: yes
+ 
 
 - name: Add entry to /etc/fstab
   lineinfile:
