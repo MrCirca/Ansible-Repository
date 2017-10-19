@@ -22,9 +22,9 @@
   when: inventory_hostname == proxmox_leader_node
   failed_when: not "'cluster config '/etc/pve/corosync.conf' already exists' in cluster_init.stderr"
 
-#- name: Expected vote 1
-#  command: pvecm expected 1
-#  when: inventory_hostname == proxmox_leader_node
+- name: Expected vote 1
+  command: pvecm expected 1
+  when: inventory_hostname == proxmox_leader_node
 
 - name: Nodes add themselves in cluster
   command: pvecm add {{ hostvars[proxmox_leader_node]['ansible_default_ipv4']['address'] }} --force

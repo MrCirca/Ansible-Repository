@@ -16,7 +16,7 @@
 - name: Install GlusterFS server
   apt:
     name:
-      - glusterfs-server
+      - glusterfs-server    
     state: present
 
 - name: Create trusted storage pool(glusterfs cluster)
@@ -31,5 +31,5 @@
   when: inventory_hostname == gluster_leader
 
 - name: Start volume
-  command: gluster volume create start {{ volume_name }}
-
+  command: gluster volume start {{ volume_name }}
+  when: inventory_hostname == gluster_leader
