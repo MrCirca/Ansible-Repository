@@ -25,7 +25,11 @@
   when: inventory_hostname == gluster_leader
 
 - name: Create replicated volume
-  command: gluster volume create {{ volume_name }} {{ volume_type }} {{ groups[target + '_glusterfs_nodes'] | count }} {{ (groups[target+'_glusterfs_nodes'] + [''])|join(':' + storage_directory + '/' + glusterfs_storage + '/brick ') }}
+  command: gluster volume create {{ volume_name }} {{ volume_type }} {{ groups[target + '_glusterfs_nodes'] | count }} {{ (groups[target+'_glusterfs_nodes'] + [''])|join(':' + storage_directory + '/' + glusterfs_storage + '/brick ') }} force
   register: create_cluster
   failed_when: create_cluster.rc !=0 and "already exists" not in create_cluster.stderr
   when: inventory_hostname == gluster_leader
+
+- name: Start volume
+  command: gluster volume create start {{ volume_name }}
+

@@ -17,13 +17,17 @@
     - resolve
 
 - name: Create a cluster on master
-  shell: pvecm create my-cluster
+  command: pvecm create my-cluster
   register: cluster_init
   when: inventory_hostname == proxmox_leader_node
   failed_when: not "'cluster config '/etc/pve/corosync.conf' already exists' in cluster_init.stderr"
 
+#- name: Expected vote 1
+#  command: pvecm expected 1
+#  when: inventory_hostname == proxmox_leader_node
+
 - name: Nodes add themselves in cluster
-  shell: pvecm add {{ hostvars[proxmox_leader_node]['ansible_default_ipv4']['address'] }} --force
+  command: pvecm add {{ hostvars[proxmox_leader_node]['ansible_default_ipv4']['address'] }} --force
   register: result
   until: result.rc == 0
   retries: 5
