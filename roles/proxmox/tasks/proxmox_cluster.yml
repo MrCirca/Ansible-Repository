@@ -9,6 +9,17 @@
   set_fact:
     proxmox_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
 
+- name: Comment proxmox enterprise repository
+  lineinfile:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    regexp: '^'
+    line: '#deb https://enterprise.proxmox.com/debian stretch pve-enterprise'
+
+- name: Add no subscription repository
+  apt_repository:
+    repo: "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription"
+    state: present
+
 - name: Add hosts to /etc/hosts for ip resolve
   template:
     src: hosts.j2
@@ -36,3 +47,8 @@
   retries: 5
   when: inventory_hostname in proxmox_nodes
 
+- name: Create glusterfs storage
+  template:
+    src: storage.cfg.j2
+    dest: /etc/pve/storage.cfg
+  when: inventory_hostname == proxmox_leader_node

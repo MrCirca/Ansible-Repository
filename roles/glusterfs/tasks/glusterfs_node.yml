@@ -7,12 +7,6 @@
   set_fact:
     gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
 
-- name: Comment proxmox enterprise repository
-  lineinfile:
-    path: /etc/apt/sources.list.d/pve-enterprise.list
-    regexp: '^'
-    line: '#deb https://enterprise.proxmox.com/debian stretch pve-enterprise'    
-
 - name: Install GlusterFS server
   apt:
     name:
