@@ -1,0 +1,14 @@
+dir: local
+    path /var/lib/vz
+    content iso,vztmpl,backup
+
+lvmthin: local-lvm
+    thinpool data
+    vgname pve
+    content rootdir,images
+
+glusterfs: glusterfs_storage
+        server {{ groups[target+'_glusterfs_nodes'][0] }}
+        server2 {{ groups[target+'_glusterfs_nodes'][1] }}
+        volume {{ volume_name }}
+        content images,iso
