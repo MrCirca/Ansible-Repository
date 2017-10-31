@@ -1,11 +1,11 @@
 ---
 - name: Set fact for Glusterfs leader
   set_fact:
-    gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][0] }}"
+    gluster_leader: "{{ groups[target+'_glusterfs_nodes'][0] }}"
 
 - name: Set fact for Glusterfs nodes
   set_fact:
-    gluster_leader: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
+    gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
 
 - name: Create volume group
   lvg:

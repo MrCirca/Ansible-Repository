@@ -13,21 +13,28 @@
       - glusterfs-server    
     state: present
 
-- name: Create trusted storage pool(glusterfs cluster)
-  command: gluster peer probe {{ hostvars[item]['inventory_hostname_short'] }}
-  with_items: "{{ gluster_nodes }}"
-  when: inventory_hostname == gluster_leader
-
-- name: Wait
-  pause:
-    seconds: 10
-
-- name: Create replicated volume
-  command: gluster volume create {{ volume_name }} {{ volume_type }} {{ groups[target + '_glusterfs_nodes'] | count }} {{ (groups[target+'_glusterfs_nodes'] + [''])|join(':' + storage_directory + '/' + glusterfs_storage + '/brick ') }} force
-  register: create_cluster
-  failed_when: create_cluster.rc !=0 and "already exists" not in create_cluster.stderr
-  when: inventory_hostname == gluster_leader
-
-- name: Start volume
-  command: gluster volume start {{ volume_name }}
-  when: inventory_hostname == gluster_leader
+#- name: Create trusted storage pool(glusterfs cluster)
+#  command: gluster peer probe {{ hostvars[item]['inventory_hostname_short'] }}
+#  with_items: "{{ gluster_nodes }}"
+#  when: inventory_hostname == gluster_leader
+#
+#- name: Wait
+#  pause:
+#    seconds: 10
+#
+#- name: Create replicated volume
+#  command: gluster volume create {{ volume_name }} {{ volume_type }} {{ groups[target + '_glusterfs_nodes'] | count }} {{ (groups[target+'_glusterfs_nodes'] + [''])|join(':' + storage_directory + '/' + glusterfs_storage + '/brick ') }} force
+#  register: create_cluster
+#  failed_when: create_cluster.rc !=0 and "already exists" not in create_cluster.stderr
+#  when: inventory_hostname == gluster_leader
+#
+#- name: Start volume
+#  command: gluster volume start {{ volume_name }}
+#  when: inventory_hostname == gluster_leader
+- name: Create volume
+  gluster_volume: 
+    state: present
+    name: "{{ volume_name }}"
+    bricks: "{{storage_directory}}/{{glusterfs_storage}}/brick"
+    replicas: "{{ groups[target + '_glusterfs_nodes'] | count }}"
+    cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
