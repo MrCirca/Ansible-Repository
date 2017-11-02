@@ -15,10 +15,10 @@
     regexp: '^'
     line: '#deb https://enterprise.proxmox.com/debian stretch pve-enterprise'
 
-- name: Add no subscription repository
-  apt_repository:
-    repo: "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription"
-    state: present
+#- name: Add no subscription repository
+#  apt_repository:
+#    repo: "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription"
+#    state: present
 
 #- name: Update all packages to the latest version
 #  apt:
@@ -40,9 +40,10 @@
 - name: Pause to create the cluster
   pause:
     seconds: 10
-#- name: Expected vote 1
-#  command: pvecm expected 1
-#  when: inventory_hostname == proxmox_leader_node
+
+- name: Expected vote 1
+  command: pvecm expected 1
+  when: inventory_hostname == proxmox_leader_node
 
 - name: Nodes add themselves in cluster
   command: pvecm add {{ hostvars[proxmox_leader_node]['ansible_default_ipv4']['address'] }} --force
