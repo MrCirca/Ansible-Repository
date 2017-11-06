@@ -21,3 +21,4 @@
     bricks: "{{storage_directory}}/{{glusterfs_storage}}/brick"
     replicas: "{{ groups[target + '_glusterfs_nodes'] | count }}"
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
+  when: inventory_hostname == gluster_leader
