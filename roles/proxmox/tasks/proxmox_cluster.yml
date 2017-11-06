@@ -57,3 +57,5 @@
     src: storage.cfg.j2
     dest: /etc/pve/storage.cfg
   when: inventory_hostname == proxmox_leader_node
+  tags:
+    - proxmox-storage

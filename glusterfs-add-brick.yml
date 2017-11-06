@@ -1,0 +1,26 @@
+---
+- hosts: "{{ target + '_glusterfs_nodes'}}"
+  tasks:
+    - name: Set fact for Glusterfs Primary node
+      set_fact:
+        gluster_leader: "{{ groups[target+'_glusterfs_nodes'][0] }}"
+
+    - name: Set fact for Glusterfs agents
+      set_fact:
+        gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
+
+    - name: Check if glusterfs-nodes are in cluster
+      shell: gluster peer status | grep {{ hostvars[item]['ansible_hostname'] }} | cut -d " " -f 2
+      with_items: "{{ gluster_nodes }}"
+      register: node_in_cluster
+      when: inventory_hostname == gluster_leader
+
+    - name: Add node in cluster
+      command: gluster peer probe {{ hostvars[item]['ansible_hostname'] }}
+      with_items: "{{ gluster_nodes }}"
+      when: inventory_hostname == gluster_leader and hostvars[item]['ansible_hostname'] != node_in_cluster
+
+    - name: Create replicated volume
+    - command: gluster volume add-brick {{ volume_name }} {{ volume_type }} {{ groups[target + '_glusterfs_nodes'] | count }} hostvars[items]['ansible_hostname']:{{ storage_directory }}/{{ glusterfs_storage }}/brick
+      with_items: "{{ gluster_nodes }}"
+    - when: inventory_hostname == gluster_leader and hostvars[items]['ansible_hostname']
