@@ -7,6 +7,10 @@
   set_fact:
     gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
 
+- name: Update repository packages
+  apt:
+    update_cache: yes
+
 - name: Install GlusterFS server and Zabbix agent
   apt:
     name:
