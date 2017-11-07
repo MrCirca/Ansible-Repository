@@ -19,11 +19,6 @@
     lv: "{{ glusterfs_storage }}"
     size: "{{ glusterfs_volume_size }}"
 
-- name: Convert volume to thin-pool
-  command: "lvconvert --force --type thin-pool -y {{ glusterfs_vg_name }}/{{ glusterfs_storage }}"
-  register: lvconvert
-  failed_when: not "'LV is already pool' in lvconvert.stderr"
-
 - name: Create xfs filesystem on partition
   filesystem:
     fstype: xfs
