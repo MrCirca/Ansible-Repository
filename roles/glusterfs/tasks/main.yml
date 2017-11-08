@@ -1,2 +1,3 @@
 ---
+- include: storage_prepare.yml
 - include: glusterfs_node.yml
