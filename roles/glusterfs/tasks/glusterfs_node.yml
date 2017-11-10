@@ -15,7 +15,6 @@
   apt:
     name:
       - glusterfs-server
-      - zabbix-agent
     state: present
 
 - name: Create volume
@@ -25,4 +24,6 @@
     bricks: "{{storage_directory}}/{{glusterfs_storage}}/brick"
     replicas: "{{ groups[target + '_glusterfs_nodes'] | count }}"
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
+    options:
+      auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
   when: inventory_hostname == gluster_leader
