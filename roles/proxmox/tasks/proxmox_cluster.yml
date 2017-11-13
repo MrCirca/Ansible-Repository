@@ -1,14 +1,4 @@
 ---
-- name: Set fact Proxmox master
-  set_fact:
-    proxmox_leader_node: "{{ groups[target+'_glusterfs_nodes'][0] }}"
-  tags:
-    - cluster
-
-- name: Set fact for Proxmox agents
-  set_fact:
-    proxmox_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
-
 - name: Comment proxmox enterprise repository
   lineinfile:
     path: /etc/apt/sources.list.d/pve-enterprise.list
@@ -25,7 +15,7 @@
 - name: Create a cluster on master
   command: pvecm create my-cluster
   register: cluster_init
-  when: inventory_hostname == proxmox_leader_node
+  when: inventory_hostname == "{{ groups[target+'_glusterfs_nodes'][0] }}"
   failed_when: not "'cluster config '/etc/pve/corosync.conf' already exists' in cluster_init.stderr"
 
 - name: Pause to create the cluster
@@ -34,20 +24,20 @@
 
 - name: Expected vote 1
   command: pvecm expected 1
-  when: inventory_hostname == proxmox_leader_node
+  when: inventory_hostname == "{{ groups[target+'_glusterfs_nodes'][0] }}"
 
 - name: Nodes add themselves in cluster
-  command: pvecm add {{ hostvars[proxmox_leader_node]['ansible_default_ipv4']['address'] }} --force
+  command: pvecm add {{ hostvars[groups[target+'_glusterfs_nodes'][0]]['ansible_default_ipv4']['address'] }} --force
   register: result
   until: result.rc == 0
   retries: 5
-  when: inventory_hostname in proxmox_nodes
+  when: inventory_hostname in "{{ groups[target+'_glusterfs_nodes'][1:] }}"
 
 - name: Create glusterfs storage
   template:
     src: storage.cfg.j2
     dest: /etc/pve/storage.cfg
-  when: inventory_hostname == proxmox_leader_node
+  when: inventory_hostname == "{{ groups[target+'_glusterfs_nodes'][0] }}"
   tags:
     - proxmox-storage
 

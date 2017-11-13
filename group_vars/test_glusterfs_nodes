@@ -2,7 +2,7 @@
 lvm_volume_groups:
   gluster_vg_0:
     physical_volumes:
-      - /dev/vdb
+      - /dev/vda
 
 lvm_logical_volumes:
   glusterfs_storage:
@@ -12,12 +12,12 @@ lvm_logical_volumes:
 
 
 #Glusterfs brick's directories
-bricks_directory:
+bricks:
   brick_0:
-   path: /mnt/bricks_directory/brick_0
+   path: /mnt/bricks/brick_0
 
 filesystems:
   - device: /dev/gluster_vg_0/glusterfs_storage
-    mountpoint: /mnt/bricks_directory/brick_0
+    mountpoint: /mnt/bricks
     fs: ext4
 

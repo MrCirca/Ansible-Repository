@@ -1,17 +1,33 @@
 ---
-- name: Set fact for Glusterfs Primary node
-  set_fact:
-    gluster_leader: "{{ groups[target+'_glusterfs_nodes'][0] }}"
+- name: Create xfs filesystem on partition
+  filesystem:
+    fstype: "{{ item.fs }}"
+    dev: "{{ item.device }}"
+  ignore_errors: yes
+  with_items: "{{ filesystems }}"
 
-- name: Set fact for Glusterfs agents
-  set_fact:
-    gluster_nodes: "{{ groups[target+'_glusterfs_nodes'][1:] }}"
+
+- name: Add entry to /etc/fstab
+  lineinfile:
+    path: /etc/fstab
+    line:  "{{ item.device}} {{ item.mountpoint }} {{ item.fs }} defaults 0 0"
+  with_items: "{{ filesystems }}"
+
+- name: Create the brick's directory
+  file:
+    path: "{{ item.mountpoint }}"
+    state: directory
+  with_items: "{{ filesystems }}"
+
+- name: Mount the line added in fstab
+  shell: mount -a
+
 
 - name: Update repository packages
   apt:
     update_cache: yes
 
-- name: Install GlusterFS server and Zabbix agent
+- name: Install GlusterFS server 
   apt:
     name:
       - glusterfs-server
@@ -21,9 +37,10 @@
   gluster_volume: 
     state: present
     name: "{{ volume_name }}"
-    bricks: "{{storage_directory}}/{{glusterfs_storage}}/brick"
+    bricks: "{{ bricks[item].path }}"
     replicas: "{{ groups[target + '_glusterfs_nodes'] | count }}"
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
     options:
       auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == gluster_leader
+  with_items: "{{ bricks }}"
+  when: inventory_hostname == "{{ groups[target+'_glusterfs_nodes'][0] }}"
