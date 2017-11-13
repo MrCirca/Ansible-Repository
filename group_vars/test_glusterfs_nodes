@@ -1,47 +1,23 @@
 ---
-glusterfs_vg_name: glusterfs_vg
-glusterfs_storage: gluster_storage
-storage_directory: /export
-
 lvm_volume_groups:
-  glusterfs:
+  gluster_vg_0:
     physical_volumes:
-      - /dev/vda
-
+      - /dev/vdb
 
 lvm_logical_volumes:
-  lvol1:
-    vg: glusterfs
-    size: 50G
-
-  lvmvol2:
-    vg: glusterfs
+  glusterfs_storage:
+    vg: gluster_vg_0
     size: 10G
 
 
-lvol:
-  vg: lvm_volumes[item].vg
-with_items: "{{ lvm_volumes }}"
+
+#Glusterfs brick's directories
+bricks_directory:
+  brick_0:
+   path: /mnt/bricks_directory/brick_0
 
 filesystems:
-  - device: /dev/mapper/glusterfs/lvmvol1
-    mountpoint: /mnt/brick1
+  - device: /dev/gluster_vg_0/glusterfs_storage
+    mountpoint: /mnt/bricks_directory/brick_0
     fs: ext4
-
-  - device: /dev/mapper/glusterfs/lvmvol2
-    mountpoint: /mnt/brick2
-
-
-glusterfs_cluster:
-
-   volumes:
-     glusterfsvol1:
-       size: 10G
-       bricks:
-         - /mnt/brick1
-
-     glusterfsvol2:
-       size: 10G
-       bricks:
-         - /mnt/brick2
 
