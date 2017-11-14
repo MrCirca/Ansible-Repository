@@ -1,7 +1,7 @@
 # Ansible Glusterfs Proxmox roles
 It's a deployment that automates the installation of Glusterfs and Proxmox stack. This project, has 3 main roles.
-1. Proxmox role: Exchanging hosts ssh public keys and create cluster.
-2. LVM role: Prepare volumes which will be used for GlusterFS
+1. Proxmox role: Exchange ssh public keys between hosts and create cluster.
+2. LVM role: Prepare volume groups and logical volumes which will be used for GlusterFS
 3. Glusterfs role: Create Glusterfs cluster and create gluster volume
 
 ## Getting Started
