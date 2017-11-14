@@ -36,11 +36,10 @@
 - name: Create volume
   gluster_volume: 
     state: present
-    name: "{{ volume_name }}"
-    bricks: "{{ bricks[item].path }}"
+    name: "{{ replication_volume.name }}"
+    bricks: "{{ replication_volume.bricks | join (',') }}"
     replicas: "{{ groups[target + '_glusterfs_nodes'] | count }}"
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
     options:
       auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  with_items: "{{ bricks }}"
   when: inventory_hostname == "{{ groups[target+'_glusterfs_nodes'][0] }}"
