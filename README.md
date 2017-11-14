@@ -48,4 +48,3 @@ replication_volume:
   bricks: # List of bricks
     - /mnt/bricks/brick_0
 ```
-ansible-playbook --private-key=path_of_your_private_key -u root main.yml -e target=name_of_group
