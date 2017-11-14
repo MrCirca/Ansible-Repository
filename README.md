@@ -16,29 +16,22 @@ In directory group_vars you can configure volume_group names, physical_volumes, 
 ```
 ---
 lvm_volume_groups:
-  gluster_vg_0:
+  gluster_vg_0: # Name of volume group.
     physical_volumes:
-      - /dev/vda
+      - /dev/vda #List of physical devices.
 
 lvm_logical_volumes:
-  glusterfs_storage:
-    vg: gluster_vg_0
-    size: 10G
-
-
-
-#Glusterfs brick's directories
-bricks:
-  brick_0:
-   path: /mnt/bricks/brick_0
+  glusterfs_storage: #Name of logical volume.
+    vg: gluster_vg_0 #Name of volume group which is already defined.
+    size: 10G #Size of logical volume.
 
 filesystems:
-  - device: /dev/gluster_vg_0/glusterfs_storage
-    mountpoint: /mnt/bricks
-    fs: ext4
+  - device: /dev/gluster_vg_0/glusterfs_storage #Path of the logical volume.
+    mountpoint: /mnt/bricks # Path where logical volume will do mount.
+    fs: ext4 # Type of filesystem.
 
 replication_volume:
-  name: gv50
-  bricks:
+  name: gv50 # Name of gluster replication volume
+  bricks: # List of bricks
     - /mnt/bricks/brick_0
 ```
