@@ -21,3 +21,6 @@ filesystems:
     mountpoint: /mnt/bricks
     fs: ext4
 
+glusterfs_volume_types:
+  - replica:
+    name: gv50
