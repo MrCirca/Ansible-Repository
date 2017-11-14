@@ -12,6 +12,19 @@ https://github.com/MrCirca/ansible-glusterfs-proxmox.git
 ### Prepare your deployment
 In directory group_vars you can configure volume_group names, physical_volumes, size, logical volumes, mountpoint etc.
 
+### Inventory and Executing
+In /etc/ansible/hosts inventory i defined group with hosts like this
+```
+[test_glusterfs_nodes] # test is the target world which you define( -e target=test) when you execute the playbook
+test1.in.modulus.gr 
+test2.in.modulus.gr
+
+```
+Executing
+```
+ansible-playbook --private-key=path_of_your_private_key -u root main.yml -e target=test
+```
+
 ### group_vars / host_vars structure
 ```
 ---
@@ -35,3 +48,4 @@ replication_volume:
   bricks: # List of bricks
     - /mnt/bricks/brick_0
 ```
+ansible-playbook --private-key=path_of_your_private_key -u root main.yml -e target=name_of_group
