@@ -10,7 +10,7 @@
 #    - role: lvm
 #  tags:
 #    - lvm
-#
+
 - hosts: "{{ target + '_glusterfs_nodes' }}"
   roles:
     - role: glusterfs

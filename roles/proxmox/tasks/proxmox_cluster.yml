@@ -31,13 +31,13 @@
   register: result
   until: result.rc == 0
   retries: 5
-  when: inventory_hostname in "{{ groups[target+'_glusterfs_nodes'][1:] }}"
+  when: inventory_hostname in groups[target+'_glusterfs_nodes'][1:]
 
 - name: Create glusterfs storage
   template:
     src: storage.cfg.j2
     dest: /etc/pve/storage.cfg
-  when: inventory_hostname == "{{ groups[target+'_glusterfs_nodes'][0] }}"
+  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0]
   tags:
     - proxmox-storage
 

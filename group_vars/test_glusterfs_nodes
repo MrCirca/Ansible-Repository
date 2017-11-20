@@ -9,22 +9,21 @@ lvm_logical_volumes:
     vg: gluster_vg_0
     size: 10G
 
-
-
-#Glusterfs brick's directories
-bricks:
-  brick_0:
-   path: /mnt/bricks/brick_0
-
 filesystems:
   - device: /dev/gluster_vg_0/glusterfs_storage
-    mountpoint: /mnt/bricks
+    mountpoint: /mnt/bricks/brick_0
     fs: ext4
 
-replication_volume:
-  name: gv50
-  bricks:
-    - /mnt/bricks/brick_0
-
-
-  
+glusterfs_volumes:
+  replicated_volume:   
+    - name: gv50
+      replicas: 2
+      bricks:
+        - /mnt/bricks/brick_0
+  distributed_volume:
+    - name: 
+      bricks:
+  striped_volume:
+    - name:
+      stripes:
+      bricks:
