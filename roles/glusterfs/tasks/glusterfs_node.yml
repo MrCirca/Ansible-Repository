@@ -40,7 +40,7 @@
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
     options:
       auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_volumes is defined and glusterfs_volumes.striped_volumes is not defined and glusterfs_volumes.replicated_volumes is not defined
+  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_volumes is defined 
   with_items: "{{ glusterfs_volumes.distributed_volumes }}"
 
 - name: Create replicated volume
@@ -52,7 +52,7 @@
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
     options:
       auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_volumes is not defined and glusterfs_volumes.striped_volumes is not defined
+  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.replicated_volumes is defined
   with_items: "{{ glusterfs_volumes.replicated_volumes }}"
 
 - name: Create distributed-replicated volume
@@ -64,8 +64,8 @@
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
     options:
       auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_volumes is defined and glusterfs_volumes.replicated_volumes is defined
-  with_items: "{{ glusterfs_volumes.replicated_volume }}"
+  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_replicated_volumes is defined
+  with_items: "{{ glusterfs_volumes.distributes_replicated_volumes }}"
 
 - name: Create striped-volume
   gluster_volume:
@@ -77,7 +77,7 @@
     options:
       auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
   when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.striped_volumes is defined
-  with_items: "{{ glusterfs_volumes.striped_volume }}"
+  with_items: "{{ glusterfs_volumes.striped_volumes }}"
 
 - name: Create distributed-striped volume
   gluster_volume:
@@ -88,6 +88,6 @@
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
     options:
       auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_volumes is defined and glusterfs_volumes.striped_volumes is defined
-  with_items: "{{ glusterfs_volumes.striped_volume }}"
+  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_striped_volumes is defined
+  with_items: "{{ glusterfs_volumes.distributed_striped_volumes }}"
 

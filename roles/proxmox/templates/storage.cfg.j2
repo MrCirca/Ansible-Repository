@@ -7,10 +7,10 @@ lvmthin: local-lvm
     vgname pve
     content rootdir,images
 
-{% for i in glusterfs_volumes.replicated_volume %}
-glusterfs: glusterfs_storage
-        server {{ groups[target+'_glusterfs_nodes'][0] }}
-        server2 {{ groups[target+'_glusterfs_nodes'][1] }}
-        volume {{ i.name }}
+{% for volume in proxmox_mount_volumes %}
+glusterfs: {{ volume.id }}
+        server {{ volume.server1 }}
+        server2 {{ volume.server2 }}
+        volume {{ volume.name }}
         content images,iso
 {% endfor %}

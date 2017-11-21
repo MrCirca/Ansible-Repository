@@ -6,24 +6,23 @@ lvm_volume_groups:
 
 lvm_logical_volumes:
   glusterfs_storage:
-    vg: gluster_vg_0
+    vg: glusterfs_vg
     size: 10G
 
 filesystems:
-  - device: /dev/gluster_vg_0/glusterfs_storage
+  - device: /dev/glusterfs_vg/glusterfs_storage
     mountpoint: /mnt/bricks/brick_0
     fs: ext4
 
 glusterfs_volumes:
-  replicated_volume:   
+  replicated_volumes:   
     - name: gv50
       replicas: 2
       bricks:
         - /mnt/bricks/brick_0
-  distributed_volume:
-    - name: 
-      bricks:
-  striped_volume:
-    - name:
-      stripes:
-      bricks:
+
+proxmox_mount_volumes:
+  - server1: {{ groups[target+'_glusterfs_nodes'][0] }}
+    server2: 
+    volume_name: gv50
+    id: glusterfs_storage
