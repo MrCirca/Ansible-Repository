@@ -29,14 +29,14 @@ $ ansible-playbook --private-key=path_of_your_private_key -u root main.yml
 ### group_vars / host_vars Structure
 ```yaml
 lvm_volume_groups:
-  gluster_vg_0:  # **Volume group name**
+  gluster_vg_0:  # Volume group name
     physical_volumes:
-      - /dev/vda  # **Physical device (partitions or disks)**
+      - /dev/vda  # Physical device (partitions or disks)
 
 lvm_logical_volumes:
   glusterfs_storage:
-    vg: gluster_vg_0  # **Volume group name**
-    size: 10G  # **Logical volume size**
+    vg: gluster_vg_0  # Volume group name
+    size: 10G  # Logical volume size
 
 filesystems:
   - device: /dev/volume_group_name/logical_volume_name
@@ -45,12 +45,12 @@ filesystems:
 
 glusterfs_volumes:
     - name: gv50
-      replicas: 2  # **If you want replicated or distributed replicated volume you should define number_of_replicas**
-      stripes: 0  # **If you want striped or distributed striped volume you should define number_of_stripes**
+      replicas: 2  # If you want replicated or distributed replicated volume you should define number_of_replicas
+      stripes: 0  # If you want striped or distributed striped volume you should define number_of_stripes
       bricks:
         - /mnt/bricks/brick_0
 proxmox_mount_volumes:
-  - server1: "{{ groups['glusterfs_nodes'][0] }}"  # **The first node in group is always the Leader node**
+  - server1: "{{ groups['glusterfs_nodes'][0] }}"  # The first node in group is always the Leader node
     server2: "{{ groups['glusterfs_nodes'][1] }}"
     name: gv50
     id: glusterfs_storage
