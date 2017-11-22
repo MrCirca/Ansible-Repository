@@ -16,14 +16,14 @@ In directory group_vars you can configure volume_group names, physical_volumes, 
 ### Inventory and Executing
 In /etc/ansible/hosts inventory is defined group with hosts like this
 ```
-[test_glusterfs_nodes] # test is the target world which you define( -e target=test) when you execute the playbook
+[glusterfs_nodes] 
 test1.in.modulus.gr 
 test2.in.modulus.gr
 
 ```
 Executing
 ```
-ansible-playbook --private-key=path_of_your_private_key -u root main.yml -e target=test
+ansible-playbook --private-key=path_of_your_private_key -u root main.yml
 ```
 
 ### group_vars / host_vars Structure
