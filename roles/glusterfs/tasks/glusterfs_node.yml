@@ -9,15 +9,15 @@
       - glusterfs-server
     state: present
 
-- name: Create distributed volume
+- name: Create Glusterf volume
   gluster_volume:
     state: present
     name: "{{ item.name }}"
     bricks: "{{ item.bricks | join (',') }}"
     replicas: "{{ item.replicas|default(None) }}"
     stripes: "{{ item.stripes|default(None) }}"
-    cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
+    cluster: "{{ groups['glusterfs_nodes'] }}"
     options:
-      auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] 
+      auth.allow: "{{ groups['glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
+  when: inventory_hostname == groups['glusterfs_nodes'][0] 
   with_items: "{{ glusterfs_volumes }}"

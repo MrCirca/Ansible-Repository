@@ -23,7 +23,7 @@
     user: root
     state: present
     key: "{{ hostvars[item]['root_public_key']['stdout'] }}"
-  with_items: "{{ groups[target+'_glusterfs_nodes'] }}"
+  with_items: "{{ groups['glusterfs_nodes'] }}"
   when: item != inventory_hostname
   tags:
     - ssh
@@ -33,7 +33,7 @@
     name: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}"
     path: /root/.ssh/known_hosts
     key: "{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ hostvars[item]['host_public_key']['stdout'] }}"
-  with_items: "{{ groups[target+'_glusterfs_nodes'] }}"
+  with_items: "{{ groups['glusterfs_nodes'] }}"
   when: item != inventory_hostname
   tags:
     - ssh
@@ -43,7 +43,7 @@
     name: "{{ hostvars[item]['inventory_hostname_short'] }}"
     path: /root/.ssh/known_hosts
     key: "{{ hostvars[item]['inventory_hostname_short'] }} {{ hostvars[item]['host_public_key']['stdout'] }}"
-  with_items: "{{ groups[target+'_glusterfs_nodes'] }}"
+  with_items: "{{ groups['glusterfs_nodes'] }}"
   when: item != inventory_hostname
   tags:
     - ssh
