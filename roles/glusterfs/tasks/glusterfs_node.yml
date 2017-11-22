@@ -14,8 +14,8 @@
     state: present
     name: "{{ item.name }}"
     bricks: "{{ item.bricks | join (',') }}"
-    replicas: "{{ item.replicas|default(None) }}"
-    stripes: "{{ item.stripes|default(None) }}"
+    replicas: "{{ item.replicas|default(0) }}"
+    stripes: "{{ item.stripes|default(0) }}"
     cluster: "{{ groups['glusterfs_nodes'] }}"
     options:
       auth.allow: "{{ groups['glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
