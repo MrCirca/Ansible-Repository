@@ -1,27 +1,4 @@
 ---
-- name: Create xfs filesystem on partition
-  filesystem:
-    fstype: "{{ item.fs }}"
-    dev: "{{ item.device }}"
-  ignore_errors: yes
-  with_items: "{{ filesystems }}"
-
-- name: Add entry to /etc/fstab
-  lineinfile:
-    path: /etc/fstab
-    line:  "{{ item.device}} {{ item.mountpoint }} {{ item.fs }} defaults 0 0"
-  with_items: "{{ filesystems }}"
-
-- name: Create the brick's directory
-  file:
-    path: "{{ item.mountpoint }}"
-    state: directory
-  with_items: "{{ filesystems }}"
-
-- name: Mount the line added in fstab
-  shell: mount -a
-
-
 - name: Update repository packages
   apt:
     update_cache: yes
@@ -37,57 +14,10 @@
     state: present
     name: "{{ item.name }}"
     bricks: "{{ item.bricks | join (',') }}"
+    replicas: "{{ item.replicas|default(None) }}"
+    stripes: "{{ item.stripes|default(None) }}"
     cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
     options:
       auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_volumes is defined 
-  with_items: "{{ glusterfs_volumes.distributed_volumes }}"
-
-- name: Create replicated volume
-  gluster_volume: 
-    state: present
-    name: "{{ item.name }}"
-    bricks: "{{ item.bricks | join (',') }}"
-    replicas: "{{ item.replicas }}"
-    cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
-    options:
-      auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.replicated_volumes is defined
-  with_items: "{{ glusterfs_volumes.replicated_volumes }}"
-
-- name: Create distributed-replicated volume
-  gluster_volume:
-    state: present
-    name: "{{ item.name }}"
-    bricks: "{{ item.bricks | join (',') }}"
-    replicas: "{{ item.replicas }}"
-    cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
-    options:
-      auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_replicated_volumes is defined
-  with_items: "{{ glusterfs_volumes.distributes_replicated_volumes }}"
-
-- name: Create striped-volume
-  gluster_volume:
-    state: present
-    name: "{{ item.name }}"
-    bricks: "{{ item.bricks | join (',') }}"
-    stripes: "{{ item.stripes }}"
-    cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
-    options:
-      auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.striped_volumes is defined
-  with_items: "{{ glusterfs_volumes.striped_volumes }}"
-
-- name: Create distributed-striped volume
-  gluster_volume:
-    state: present
-    name: "{{ item.name }}"
-    bricks: "{{ item.bricks | join (',') }}"
-    stripes: "{{ item.stripes }}"
-    cluster: "{{ groups[target + '_glusterfs_nodes'] }}"
-    options:
-      auth.allow: "{{ groups[target+'_glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
-  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] and glusterfs_volumes.distributed_striped_volumes is defined
-  with_items: "{{ glusterfs_volumes.distributed_striped_volumes }}"
-
+  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0] 
+  with_items: "{{ glusterfs_volumes }}"

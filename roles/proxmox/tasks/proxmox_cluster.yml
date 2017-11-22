@@ -15,7 +15,7 @@
 - name: Create a cluster on master
   command: pvecm create my-cluster
   register: cluster_init
-  when: inventory_hostname == "{{ groups[target+'_glusterfs_nodes'][0] }}"
+  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0]
   failed_when: not "'cluster config '/etc/pve/corosync.conf' already exists' in cluster_init.stderr"
 
 - name: Pause to create the cluster
@@ -24,7 +24,7 @@
 
 - name: Expected vote 1
   command: pvecm expected 1
-  when: inventory_hostname == "{{ groups[target+'_glusterfs_nodes'][0] }}"
+  when: inventory_hostname == groups[target+'_glusterfs_nodes'][0]
 
 - name: Nodes add themselves in cluster
   command: pvecm add {{ hostvars[groups[target+'_glusterfs_nodes'][0]]['ansible_default_ipv4']['address'] }} --force
