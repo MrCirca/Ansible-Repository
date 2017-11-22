@@ -23,11 +23,11 @@ test2.in.modulus.gr
 ```
 Executing
 ```
-ansible-playbook --private-key=path_of_your_private_key -u root main.yml
+$ ansible-playbook --private-key=path_of_your_private_key -u root main.yml
 ```
 
 ### group_vars / host_vars Structure
-```
+```yaml
 lvm_volume_groups:
   gluster_vg_0:  # **Volume group name**
     physical_volumes:
@@ -50,8 +50,8 @@ glusterfs_volumes:
       bricks:
         - /mnt/bricks/brick_0
 proxmox_mount_volumes:
-  - server1: "{{ groups[target+'_glusterfs_nodes'][0] }}"
-    server2: "{{ groups[target+'_glusterfs_nodes'][1] }}"
+  - server1: "{{ groups['glusterfs_nodes'][0] }}"  # **The first node in group is always the Leader node**
+    server2: "{{ groups['glusterfs_nodes'][1] }}"
     name: gv50
     id: glusterfs_storage
 ```
