@@ -12,4 +12,3 @@
     lv: "{{ item }}"
     size: "{{ lvm_logical_volumes[item].size }}"
   with_items: "{{ lvm_logical_volumes }}"
-

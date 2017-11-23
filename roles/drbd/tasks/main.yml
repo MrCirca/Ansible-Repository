@@ -1,0 +1,2 @@
+---
+- include: drbd_node.yml

@@ -1,0 +1,21 @@
+---
+- hosts: "{{ 'drbd_nodes' }}"
+  tasks:
+    - name: Set fact for Leader node
+      set_fact:
+        drbd_leader: "{{ groups['drbd_nodes'][0] }}"
+      tags:
+        - drbd_cluster_init
+
+    - name: Set fact for drbd nodes
+      set_fact:
+         drbd_nodes: "{{ groups['drbd_nodes'][1:] }}"
+      tags:
+        - drbd_cluster_init 
+
+    - name: Initializing cluster only on leader node
+      command: drbdmanage init -q
+      when: inventory_hostname == drbd_leader
+      tags:
+        - drbd_cluster_init
+

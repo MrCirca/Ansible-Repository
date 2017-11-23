@@ -1,0 +1,172 @@
+---
+- name: Set fact for Leader node
+  set_fact:
+    drbd_leader: "{{ groups['drbd_nodes'][0] }}"
+  tags:
+    - drbd_cluster_init
+
+- name: Set fact for control nodes
+  set_fact:
+    drbd_nodes: "{{ groups['drbd_nodes'][1:] }}"
+  tags:
+    - drbd_cluster_init
+
+- name: Drbdmanage itself executes wipefs on created block devices
+  lineinfile:
+     dest: /etc/lvm/lvm.conf
+     regexp: '^\s+wipe_signatures_when_zeroing_new_lvs\s=\s1'
+     line: '        wipe_signatures_when_zeroing_new_lvs = 0'
+
+- name: Check Proxmox version 
+  shell: "pveversion | cut -d '/' -f 2 | cut -d '.' -f 1" 
+  register: pve_version 
+  tags: 
+    - check_pveversion
+
+- name: Download DRBD9 package-signing-pubkey 
+  apt_key: 
+    url: "https://packages.linbit.com/package-signing-pubkey.asc" 
+    state: present 
+  tags:  
+    - drbd_cluster_init
+    - repo
+ 
+- name: Add drbd9  repository for Proxmox 4
+  apt_repository: 
+    repo: "deb https://packages.linbit.com/proxmox/ proxmox-4 drbd-9.0" 
+    state: present
+  when: pve_version.stdout == "4"
+  tags:  
+    - drbd_cluster_init
+    - repo
+
+- name: Add drbd9  repository for Proxmox 5
+  apt_repository:
+    repo: "deb https://packages.linbit.com/proxmox/ proxmox-5 drbd-9.0"
+    state: present
+  when: pve_version.stdout == "5"
+  tags:
+    - drbd_cluster_init
+    - repo
+
+- name: Add no subscription repository
+  apt_repository:
+    repo: "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription"
+    state: present
+  when: pve_version.stdout == "5"
+  tags:
+    - drbd_cluster_init
+    - repo
+
+- name: Add no subscription repository for Jessie
+  apt_repository:
+    repo: "deb http://download.proxmox.com/debian/pve jessie pve-no-subscription"
+    state: present
+  when: pve_version.stdout == "4"
+  tags:
+    - drbd_cluster_init
+    - repo
+
+ 
+- name: Update repository packages
+  apt: 
+    update_cache: yes 
+    state: latest 
+  tags:  
+    - drbd_cluster_init
+    - repo
+
+
+#- name: Reboot
+#  shell: sleep 5; reboot
+#  async: 10
+#  poll: 0
+#  when: reboot | default(False) and kernel_upgrade.stdout == "1"
+#  tags:
+#    - reboot
+
+#- name: local action
+#  wait_for:
+#    delay: 15
+#    port: 22
+#    host: "{{ansible_default_ipv4['address']}}"
+#    timeout: 300
+#  delegate_to: localhost
+#  tags:
+#    - reboot
+
+#- name: Wait to start hosts
+#  wait_for:
+#    port: 8006
+#    state: started
+#  tags:
+#    - reboot
+
+- name: Install pve-headers, drbdmanage-proxmox, python-drbdmanage when Proxmox is version 5
+  apt: 
+    name:
+      - proxmox-ve    
+      - pve-headers
+      - drbd-utils
+      - drbdmanage-proxmox
+      - python-drbdmanage
+      - drbd-dkms
+      - zabbix-agent
+      - git
+    state: latest
+  when: pve_version.stdout == "5" 
+
+
+#- name: Install drbd-dkms 9.0.7 which is tested
+#  apt:
+#    deb: http://packages.linbit.com/proxmox/dists/proxmox-4/drbd-9.0/binary-amd64/drbd-dkms_9.0.7+linbit-1_all.deb
+#    install_recommends: yes
+#    state: present
+#  when: pve_version.stdout == "5"
+
+- name: Install drbdmanage-proxmox and its dependencies for Proxmox 4
+  apt: 
+    name:    
+      - drbdmanage-proxmox
+      - git
+  when: pve_version.stdout == "4"
+
+- name: Confirm that packages (drbd-utils, lvm2, drbdmanage) are installed
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - drbd-utils
+    - lvm2
+    - drbdmanage
+
+- name: Check if drbdtop is installed
+  stat:
+    path: /usr/bin/drbdtop
+  register: drbdtop
+
+- name: Unarchive a file that needs to be downloaded
+  unarchive:
+    src: https://storage.googleapis.com/golang/go1.9.linux-amd64.tar.gz
+    dest: /usr/local
+    remote_src: yes
+  when: drbdtop.stat.exists == False
+
+- name: Download drbdtop
+  command: /usr/local/go/bin/go get github.com/linbit/drbdtop
+  when: drbdtop.stat.exists == False
+
+- name: Copy drbtop to /usr/bin
+  copy:
+    src: /root/go/bin/drbdtop
+    dest: /usr/bin/
+    remote_src: yes
+    owner: root
+    mode: u+x
+  when: drbdtop.stat.exists == False
+
+- name: Delete directory
+  file:
+    path: /root/go/
+    state: absent
+  when: drbdtop.stat.exists == False
