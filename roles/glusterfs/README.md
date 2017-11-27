@@ -5,7 +5,7 @@ Role Variables
 --------------
 
 Examples of variables used in this role:
-
+```
 glusterfs_volumes:   
     - name: gv51
       stripes: 2
@@ -19,4 +19,4 @@ glusterfs_volumes:
       replicas: 2
       bricks:
         - /mnt/bricks_striped/brick_1
-
+```
