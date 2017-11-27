@@ -1,23 +1,46 @@
 ---
-- hosts: "{{ 'glusterfs_nodes' }}"
+- hosts: "{{ target }}"
   roles:
     - role: proxmox
   tags:
     - proxmox
+    - drbd
+    - glusterfs
 
-- hosts: "{{ 'glusterfs_nodes' }}"
+- hosts: "{{ target }}"
   roles:
     - role: lvm
+      tags:
+        - volume_groups
   tags:
     - lvm
+    - drbd
+    - glusterfs
 
-- hosts: "{{ 'glusterfs_nodes' }}"
+- hosts: "{{ target }}"
+  roles:
+    - role: drbd
+  tasks:
+    - include: drbd_init.yml
+  tags:
+    - drbd
+
+- hosts: "{{ target }}"
+  serial: 1
+  tasks:
+    - include: drbd_node_add.yml
+  tags:
+    - drbd
+
+
+- hosts: "{{ target }}"
   roles:
     - role: common
   tags:
     - common
+    - glusterfs
 
-- hosts: "{{ 'glusterfs_nodes' }}"
+- hosts: "{{ target }}"
   roles:
     - role: glusterfs
   tags:

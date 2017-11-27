@@ -7,10 +7,17 @@ lvmthin: local-lvm
     vgname pve
     content rootdir,images
 
+{%  if storage_type == "glusterfs"%}
 {% for volume in proxmox_mount_volumes %}
-glusterfs: {{ volume.id }}
+{{storage_type}}: {{ volume.id }}
         server {{ volume.server1 }}
         server2 {{ volume.server2 }}
         volume {{ volume.name }}
         content images,iso
 {% endfor %}
+  {% else %}
+{{storage_type}}:drbdstorage
+       redudancy: {{ groups['drbd_nodes'] | count }}
+       content images,rootdir,iso
+  
+  {% endif %}

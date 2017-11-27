@@ -15,7 +15,7 @@
 - name: Create a cluster on master
   command: pvecm create my-cluster
   register: cluster_init
-  when: inventory_hostname == groups['glusterfs_nodes'][0]
+  when: inventory_hostname == groups[storage_type+'_nodes'][0]
   failed_when: not "'cluster config '/etc/pve/corosync.conf' already exists' in cluster_init.stderr"
 
 - name: Pause to create the cluster
@@ -24,20 +24,20 @@
 
 - name: Expected vote 1
   command: pvecm expected 1
-  when: inventory_hostname == groups['glusterfs_nodes'][0]
+  when: inventory_hostname == groups[storage_type+'_nodes'][0]
 
 - name: Nodes add themselves in cluster
-  command: pvecm add {{ hostvars[groups['glusterfs_nodes'][0]]['ansible_default_ipv4']['address'] }} --force
+  command: pvecm add {{ hostvars[groups[storage_type+'_nodes'][0]]['ansible_default_ipv4']['address'] }} --force
   register: result
   until: result.rc == 0
   retries: 5
-  when: inventory_hostname in groups['glusterfs_nodes'][1:]
+  when: inventory_hostname in groups[storage_type+'_nodes'][1:]
 
-- name: Create glusterfs storage
+- name: Create {{storage_type}} storage
   template:
     src: storage.cfg.j2
     dest: /etc/pve/storage.cfg
-  when: inventory_hostname == groups['glusterfs_nodes'][0]
+  when: inventory_hostname == groups[storage_type+'_nodes'][0]
   tags:
     - proxmox-storage
 

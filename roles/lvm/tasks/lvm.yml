@@ -4,7 +4,8 @@
     vg: "{{ item }}"
     pvs: "{{lvm_volume_groups[item].physical_volumes }}"
   with_items: "{{ lvm_volume_groups }}"
-
+  tags:
+    - volume_groups
 
 - name: Create logical volumes 
   lvol:
@@ -12,3 +13,4 @@
     lv: "{{ item }}"
     size: "{{ lvm_logical_volumes[item].size }}"
   with_items: "{{ lvm_logical_volumes }}"
+  when: lvm_logical_volumes is defined
