@@ -16,8 +16,8 @@
     bricks: "{{ item.bricks | join (',') }}"
     replicas: "{{ item.replicas|default(0) }}"
     stripes: "{{ item.stripes|default(0) }}"
-    cluster: "{{ groups['glusterfs_nodes'] }}"
+    cluster: "{{ groups[storage_type+'_nodes'] }}"
     options:
-      auth.allow: "{{ groups['glusterfs_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
+      auth.allow: "{{ groups[storage_type+'_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
   when: inventory_hostname == groups['glusterfs_nodes'][0] 
   with_items: "{{ glusterfs_volumes }}"
