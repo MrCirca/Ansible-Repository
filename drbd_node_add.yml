@@ -1,0 +1,64 @@
+---
+- name: Set fact for Leader node
+  set_fact:
+    drbd_leader: "{{ groups['drbd_nodes'][0] }}"
+  tags:
+    - check
+    - first_time
+
+- name: Set fact for agents
+  set_fact:
+    drbd_nodes: "{{ groups['drbd_nodes'][1:] }}"
+  tags:
+    - check
+    - first_time
+
+- name: Leader node add agents in cluster
+  shell: drbdmanage add-node {{ inventory_hostname_short }} {{ ansible_default_ipv4['address'] }} -q
+  when: inventory_hostname in drbd_nodes
+  delegate_to: "{{ drbd_leader }}"
+  ignore_errors: yes
+
+- name: Drbdmanage restart
+  shell: drbdmanage restart
+  delegate_to: "{{ drbd_leader }}"
+
+- name: Check drbd node state
+  shell: drbdsetup status | grep -A2 {{ inventory_hostname_short }} | grep -c UpToDate
+  register: check_node_state
+  until: check_node_state.stdout == "2"
+  retries: 50
+  delay: 3
+  when: inventory_hostname in drbd_nodes
+  delegate_to: "{{ drbd_leader }}"
+
+#    - name: Check if drbd nodes are in cluster
+#      shell: drbdmanage nodes -m 2>/dev/null | grep -c '^{{hostvars[item]["inventory_hostname_short"]}}'
+#      with_items: "{{ drbd_nodes }}"
+#      ignore_errors: yes
+#      register: check
+#      tags:
+#        - check
+
+#    - name: Leader node add agents in cluster
+#      command: drbdmanage add-node {{ hostvars[item.item]['inventory_hostname_short'] }} {{ hostvars[item.item]['ansible_default_ipv4']['address'] }} -q
+#      with_items: "{{ check.results }}"
+#      register: add_node_command
+#      until: add_node_command.rc == 0
+#      retries: 5
+#      when: inventory_hostname == drbd_leader and item.stdout == "0"
+#      tags:
+#        - check
+
+#    - name: Check if drbd-node has established connection
+#      shell: drbdsetup status | grep -A2 {{ hostvars[item]['inventory_hostname_short'] }} | grep -c UpToDate
+#      register: drbd_node_connection
+
+#    - name: Leader node add agents in cluster
+#      shell: drbdmanage add-node {{ hostvars[item]['inventory_hostname_short'] }} {{ hostvars[item]['ansible_default_ipv4']['address'] }} -q
+#      with_items: "{{ drbd_nodes }}"
+#      register: add_node_command
+#      when: inventory_hostname == drbd_leader
+#      tags:
+#        - check
+#        - first_time
