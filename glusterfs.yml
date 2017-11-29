@@ -15,9 +15,9 @@
 
 - hosts: "{{ storage_type+'_nodes' }}"
   roles:
-    - role: common
+    - role: filesystem
   tags:
-    - common
+    - filesystem 
     - glusterfs
 
 - hosts: "{{ storage_type+'_nodes' }}"
