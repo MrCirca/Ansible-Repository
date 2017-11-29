@@ -1,6 +1,13 @@
 ---
 - hosts: "{{ storage_type+'_nodes' }}"
   roles:
+    - role: proxmox
+  tags:
+    - proxmox
+    - glusterfs
+
+- hosts: "{{ storage_type+'_nodes' }}"
+  roles:
     - role: lvm
   tags:
     - lvm
@@ -10,7 +17,7 @@
   roles:
     - role: filesystem
   tags:
-    - filesystem
+    - filesystem 
     - glusterfs
 
 - hosts: "{{ storage_type+'_nodes' }}"
@@ -18,4 +25,3 @@
     - role: glusterfs
   tags:
     - glusterfs
-

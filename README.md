@@ -1,5 +1,5 @@
-# Ansible  Proxmox and Storage Clulster roles
-It's a deployment that automates the Proxmox installation with DRBD9 or GlusterFS storage. This project, has 5 main roles.
+# Ansible repository
+It's an Ansible repository.
 1. Proxmox role: Exchange ssh public keys between hosts and create Proxmox cluster.
 2. Filesystem role: Has tasks for filesystem creation
 3. LVM role: Prepare volume groups and logical volumes which will be used for GlusterFS storage

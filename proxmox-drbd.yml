@@ -1,6 +1,10 @@
 ---
 - hosts: "{{ storage_type+'_nodes'}}"
   roles:
+    - role: proxmox
+
+- hosts: "{{ storage_type+'_nodes'}}"
+  roles:
     - role: lvm
 
 - hosts: "{{ storage_type+'_nodes'}}"
