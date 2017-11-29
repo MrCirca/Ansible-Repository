@@ -1,7 +1,7 @@
-common
+Filesystem
 =======
 
-Common deployment tasks for debian based systems.
+Filesystem deployment tasks for debian based systems.
 
 Role Variables
 --------------
