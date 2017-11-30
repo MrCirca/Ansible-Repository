@@ -1,0 +1,5 @@
+---
+- hosts: "{{ storage_type+'_nodes' }}"
+  roles:
+    - role: lvm
+
