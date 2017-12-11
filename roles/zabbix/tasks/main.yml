@@ -1,0 +1,2 @@
+---
+- include zabbix_item.yml

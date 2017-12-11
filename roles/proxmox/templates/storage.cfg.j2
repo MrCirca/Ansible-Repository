@@ -18,6 +18,6 @@ lvmthin: local-lvm
   {% else %}
 {{storage_type}}:drbdstorage
        redudancy: {{ groups['drbd_nodes'] | count }}
-       content images,rootdir,iso
+       content images,rootdir,iso,vztmpl,backup
   
   {% endif %}

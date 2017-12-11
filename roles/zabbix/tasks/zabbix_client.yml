@@ -1,0 +1,15 @@
+---
+- name: Create a new zabbix host or update an existing host's info
+  zabbix_host:
+    server_url: "{{ item.url }}"
+    login_user: "{{ item.username }}"
+    login_password: "{{ item.password }}"
+    host_name: "{{ item.hostname }}"
+    visible_name: "{{ item.visible_hostname }}"
+    host_groups: "{{ item.groups }}"
+    link_templates: "{{ item.templates }}"
+    status: enabled
+    state: present
+    inventory_mode: automatic
+    interfaces: "{{ item.interface }}"
+  with_items: "{{ zabbix_servers }}"
