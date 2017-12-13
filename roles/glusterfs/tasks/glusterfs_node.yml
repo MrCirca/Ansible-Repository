@@ -19,5 +19,6 @@
     cluster: "{{ groups[storage_type+'_nodes'] }}"
     options:
       auth.allow: "{{ groups[storage_type+'_nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(',') }}"
+      profile: "{{ item.name }}" start
   when: inventory_hostname == groups['glusterfs_nodes'][0] 
   with_items: "{{ glusterfs_volumes }}"
