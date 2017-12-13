@@ -22,6 +22,6 @@ zabbix_servers:
         main: 1           # default
         useip: 1
         ip: "{{ hostvars[ansible_hostname]['ansible_default_ipv4']['address']}}"
-#       dns:
+        dns: ""
         port: 10050
 ```

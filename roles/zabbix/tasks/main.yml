@@ -1,2 +1,2 @@
 ---
-- include zabbix_item.yml
+- include: zabbix_client.yml
