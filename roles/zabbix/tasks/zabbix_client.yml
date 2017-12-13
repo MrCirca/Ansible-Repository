@@ -13,3 +13,10 @@
     inventory_mode: automatic
     interfaces: "{{ item.interface }}"
   with_items: "{{ zabbix_servers }}"
+
+- name: Add zabbix_agentd.conf
+  template:
+    src: zabbix_agentd.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf
+
+

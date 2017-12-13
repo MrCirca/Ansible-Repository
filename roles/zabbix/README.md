@@ -8,7 +8,7 @@ Examples of variables used in this role:
 ```
 ---
 zabbix_servers:
-  - url: 172.17.172.47
+  - url: http://172.17.172.47
     username: zabbix
     password: password
     hostname: "{{ ansible_hostname }}"
