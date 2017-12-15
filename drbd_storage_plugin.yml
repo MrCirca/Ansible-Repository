@@ -1,0 +1,27 @@
+---
+- name: Create script - Storage Plugin
+  template:
+    src: roles/drbd/templates/storage_plugin.sh.j2
+    dest: /etc/storage_plugin.sh
+    mode: "0755"
+  tags:
+    - storage_plugin
+
+- name: Primary node executing "drbdmanage modify-config" for each node
+  shell: drbdmanage modify-config --node {{ hostvars[item]['inventory_hostname_short'] }}
+  environment:
+    EDITOR: /etc/storage_plugin.sh
+  with_items: "{{ groups['drbd_nodes'] }}"
+  when: inventory_hostname == groups['drbd_nodes'][0]
+  tags:
+    - storage_plugin
+
+#- name: Delete script
+#  file:
+#    path: /etc/storage_plugin.sh
+#    state: absent
+#  tags:
+#    - storage_plugin
+
+- name: Drbdmanage restart
+  command: drbdmanage restart -q

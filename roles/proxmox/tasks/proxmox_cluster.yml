@@ -12,6 +12,20 @@
   tags:
     - resolve
 
+- name: Add no subscription repository
+  apt_repository:
+    repo: "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription"
+    state: present
+
+- name: Update repository packages
+  apt:
+    update_cache: yes
+
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+
 - name: Create a cluster on master
   command: pvecm create my-cluster
   register: cluster_init
@@ -40,17 +54,17 @@
   when: inventory_hostname == groups[storage_type+'_nodes'][0]
   tags:
     - proxmox-storage
+#
+#- name: Add no subscription repository
+#  apt_repository:
+#    repo: "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription"
+#    state: present
+#
+#- name: Update repository packages
+#  apt:
+#    update_cache: yes
 
-- name: Add no subscription repository
-  apt_repository:
-    repo: "deb http://download.proxmox.com/debian/pve stretch pve-no-subscription"
-    state: present
-
-- name: Update repository packages
-  apt:
-    update_cache: yes
-
-- name: Update all packages to the latest version
-  apt:
-    upgrade: dist
-
+#- name: Update all packages to the latest version
+#  apt:
+#    upgrade: dist
+#

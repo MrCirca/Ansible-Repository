@@ -14,7 +14,7 @@
 - name: Drbdmanage itself executes wipefs on created block devices
   lineinfile:
      dest: /etc/lvm/lvm.conf
-     regexp: '^\s+wipe_signatures_when_zeroing_new_lvs\s=\s1'
+     regexp: '^\s+wipe_signatures_when_zeroing_new_lvs\s=\s1$'
      line: '        wipe_signatures_when_zeroing_new_lvs = 0'
 
 - name: Check Proxmox version 
@@ -102,19 +102,19 @@
 #  tags:
 #    - reboot
 
-- name: Install pve-headers, drbdmanage-proxmox, python-drbdmanage when Proxmox is version 5
-  apt: 
-    name:
-      - proxmox-ve    
-      - pve-headers
-      - drbd-utils
-      - drbdmanage-proxmox
-      - python-drbdmanage
-      - drbd-dkms
-      - zabbix-agent
-      - git
-    state: latest
-  when: pve_version.stdout == "5" 
+#- name: Install pve-headers, drbdmanage-proxmox, python-drbdmanage when Proxmox is version 5
+#  apt: 
+#    name:
+#      - proxmox-ve    
+#      - pve-headers
+#      - drbd-utils
+#      - drbdmanage-proxmox
+#      - python-drbdmanage
+#      - drbd-dkms
+#      - zabbix-agent
+#      - git
+#    state: latest
+#  when: pve_version.stdout == "5" 
 
 
 #- name: Install drbd-dkms 9.0.7 which is tested

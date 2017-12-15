@@ -1,24 +1,30 @@
 ---
-- hosts: "{{ storage_type+'_nodes'}}"
-  roles:
-    - role: proxmox
+#- hosts: "{{ storage_type+'_nodes'}}"
+#  roles:
+#    - role: proxmox
+#
+#- hosts: "{{ storage_type+'_nodes'}}"
+#  roles:
+#    - role: lvm
+#
+#- hosts: "{{ storage_type+'_nodes'}}"
+#  roles:
+#    - role: drbd
+#  tasks:
+#    - include: drbd_init.yml
+#  tags:
+#    - drbd
+#
+#- hosts: "{{ storage_type+'_nodes'}}"
+#  serial: 1
+#  tasks:
+#    - include: drbd_node_add.yml
+#  tags:
+#    - drbd
 
 - hosts: "{{ storage_type+'_nodes'}}"
-  roles:
-    - role: lvm
-
-- hosts: "{{ storage_type+'_nodes'}}"
-  roles:
-    - role: drbd
   tasks:
-    - include: drbd_init.yml
-  tags:
-    - drbd
-
-- hosts: "{{ storage_type+'_nodes'}}"
-  serial: 1
-  tasks:
-    - include: drbd_node_add.yml
+    - include: drbd_storage_plugin.yml
   tags:
     - drbd
 
