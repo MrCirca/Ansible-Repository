@@ -16,15 +16,16 @@
   with_items: "{{ lvm_thin_pools }}"
   when: lvm_thin_pools is defined
 
-- name: Create Thin Volumes
-  lvol:
-    vg: "{{ lvm_thin_volumes[item].vg }}"
-    lv: "{{ item }}"
-    size: "{{ lvm_thin_volumes[item].size }}"
-    opts: -V {{ lvm_thin_volumes[item].size }} -T
+- name: Check if thin_volume exists
+  shell: lvs | grep -E -c '^\s+{{ item }}\s' | cut -d " " -f 3
+  register: thin_volume_exist
   with_items: "{{ lvm_thin_volumes }}"
   when: lvm_thin_volumes is defined
 
+- name: Create thin volume
+  command: lvcreate -V {{ lvm_thin_volumes[item].size}} -T -n {{ item }} {{ lvm_thin_volumes[item].vg }}/{{ lvm_thin_volumes[item].thin_pool }}
+  with_items: "{{ lvm_thin_volumes }}"
+  when: thin_volume_exist == "1" and lvm_thin_volumes is defined
 
 - name: Create logical volumes 
   lvol:
