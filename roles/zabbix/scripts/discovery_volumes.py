@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import json
 import subprocess
 import xml.etree.ElementTree as ET
 
@@ -9,9 +10,11 @@ root  = ET.fromstring(gluster_volumes_xml)
 
 volumes = root.find('volStatus').find('volumes').findall('volume')
 
-for node in volumes:
-    for info in node.findall('node'):
-        print(info.find('hostname').text)
-        print(info.find('path').text)
-        print(info.find('status').text)
+gluster_volume_info = []
+
+for volume_name in volumes:
+    gluster_volume_name = volume_name.find('volName').text
+    gluster_volume_info.append({"#VOLUME_NAME": gluster_volume_name})
+
+print(json.dumps({'data': gluster_volume_info}))
 
