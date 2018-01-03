@@ -7,7 +7,15 @@
   apt:
     name:
       - glusterfs-server
+      - git
     state: present
+
+- name: Download gstatus
+  git:
+    repo: 'https://github.com/gluster/gstatus.git'
+    dest: /opt
+    clone: yes
+    update: no
 
 - name: Create Glusterf volume
   gluster_volume:
