@@ -18,15 +18,15 @@ In directory group_vars you can configure volume_group names, physical_volumes, 
 In /etc/ansible/hosts inventory is defined group with hosts like this
 ```
 [glusterfs_nodes] 
-test1.in.modulus.gr 
-test2.in.modulus.gr
+test
+test2
 
 ```
 or
 ```
 [drbd_nodes]
-test1.in.modulus.gr
-test2.in.modulus.gr
+test1
+testt2
 ```
 ### Deploying
 ```
