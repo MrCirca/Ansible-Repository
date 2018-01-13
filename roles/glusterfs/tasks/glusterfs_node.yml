@@ -33,4 +33,4 @@
   register: result
   with_items: "{{ glusterfs_volumes }}"
   when: inventory_hostname == groups['glusterfs_nodes'][0]
-  failed_when: result.stderr == "Profile on Volume {{item}} is already started"
+  failed_when: result.stderr == "Profile on Volume item is already started"
