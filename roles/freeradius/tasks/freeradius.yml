@@ -1,0 +1,8 @@
+---
+- name: Install freeradius packages
+  apt:
+    name:
+      - freeradius
+      - freeradius-ldap
+    state: present
+
