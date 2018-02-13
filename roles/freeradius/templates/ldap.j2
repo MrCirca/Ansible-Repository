@@ -45,7 +45,7 @@ ldap {
 
 		#  Filter for user objects, should be specific enough
 		#  to identify a single user object.
-		filter = "(uid=%{%{Stripped-User-Name}:-%{User-Name}})"
+		filter = {{'"(uid=%{%{Stripped-User-Name}:-%{User-Name}})"'}}
 
 	}
 
@@ -65,12 +65,11 @@ ldap {
 		#  Attribute that uniquely identifies a group.
 		#  Is used when converting group DNs to group
 		#  names.
-		name_attribute = cn
 
 		#  Filter to find group objects a user is a member of.
 		#  That is, group objects with attributes that
 		#  identify members (the inverse of membership_attribute).
-		membership_filter = "(|(member=%{control:Ldap-UserDn})(memberUid=%{%{Stripped-User-Name}:-%{User-Name}}))"
+		membership_filter = {{'"(|(member=%{control:Ldap-UserDn})(memberUid=%{%{Stripped-User-Name}:-%{User-Name}}))"'}}
 
 		#  The attribute in user objects which contain the names
 		#  or DNs of groups a user is a member of.
@@ -127,12 +126,12 @@ ldap {
 	#
 	client {
 		#   Where to start searching in the tree for clients
-		base_dn = "@LDAP_CLIENT_BASEDN@"
+#		base_dn = "@LDAP_CLIENT_BASEDN@"
 
 		#
 		#  Filter to match client objects
 		#
-		filter = '(objectClass=frClient)'
+#		filter = '(objectClass=frClient)'
 
 		# Search scope, may be 'base', 'one', 'sub' or 'children'
 #		scope = 'sub'
@@ -156,14 +155,14 @@ ldap {
 		#
 		#  Schemas are available in doc/schemas/ldap for openldap and eDirectory
 		#
-		attribute {
-			identifier			= 'radiusClientIdentifier'
-			secret				= 'radiusClientSecret'
+#		attribute {
+#			identifier			= 'radiusClientIdentifier'
+#			secret				= 'radiusClientSecret'
 #			shortname			= 'radiusClientShortname'
 #			nas_type			= 'radiusClientType'
 #			virtual_server			= 'radiusClientVirtualServer'
 #			require_message_authenticator	= 'radiusClientRequireMa'
-		}
+#		}
 	}
 
 	#  Load clients on startup
@@ -297,7 +296,7 @@ ldap {
 		# using ldaps (port 636) connections
 		start_tls = no
 
-#		ca_file	= ${certdir}/cacert.pem
+		ca_file	= {{ca_pub_path}}
 
 #		ca_path	= ${certdir}
 #		certificate_file = /path/to/radius.crt

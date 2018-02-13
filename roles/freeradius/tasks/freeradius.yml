@@ -6,3 +6,20 @@
       - freeradius-ldap
     state: present
 
+- name: LDAP configuration file
+  template:
+    src: ldap.j2
+    dest: /etc/freeradius/3.0/mods-available/ldap
+    owner: freerad
+    group: freerad
+    mode: "0640"
+
+
+- name: LDAP module link
+  file:    
+    src: ../mods-available/ldap
+    dest: /etc/freeradius/3.0/mods-enabled/ldap
+    owner: freerad
+    group: freerad
+    state: link
+#    force: yes
