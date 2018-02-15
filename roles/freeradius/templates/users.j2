@@ -1,0 +1,7 @@
+{% for radius_user in freeradius_users %}
+{{ radius_user.name }}  Cleartext-Password := "{{radius_user.password}}"
+                   Auth-Type:= {{ radius_user.auth_type}}
+{% endfor %}
+
+
+

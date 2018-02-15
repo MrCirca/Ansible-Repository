@@ -38,4 +38,10 @@
     group: freerad
     mode: "0640"
 
-
+- name: Freeradius users
+  template:
+    src: users.j2
+    dest: /etc/freeradius/3.0/users
+    owner: freerad
+    group: freerad
+    mode: "0640"
