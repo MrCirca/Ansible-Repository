@@ -5,6 +5,7 @@ It's an Ansible repository.
 3. LVM role: Prepare volume groups and logical volumes which will be used for GlusterFS storage
 4. Glusterfs role: Create Glusterfs cluster and create gluster volume
 5. DRBD9 role: Create DRBD9 cluster
+6. Freeradius
 
 ## Getting Started
 You should clone the repository
