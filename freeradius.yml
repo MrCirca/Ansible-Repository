@@ -1,0 +1,4 @@
+---
+- hosts: freeradius
+  roles:
+    - role: freeradius

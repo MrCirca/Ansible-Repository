@@ -30,3 +30,12 @@
     state: link
   when: ldap_server is defined
 
+- name: Freeradius Clients
+  template:
+    src: clients.conf.j2
+    dest: /etc/freeradius/3.0/clients.conf
+    owner: freerad
+    group: freerad
+    mode: "0640"
+
+
