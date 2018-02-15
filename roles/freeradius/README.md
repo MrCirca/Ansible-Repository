@@ -17,3 +17,10 @@ ldap_people_group: "ou=People,dc=example,dc=gr"
 ldap_branch_group: "cn=support,ou=Groups,dc=example,dc=gr"
 ca_pub_path: /home/myCA.pem
 ```
+For Radius Clients
+```
+freeradius_clients:
+  - name: radius_client_name
+    ip_address: 192.168.1.0/24
+    secret: password
+```
