@@ -24,3 +24,10 @@ freeradius_clients:
     ip_address: 192.168.1.0/24
     secret: password
 ```
+For Radius Users
+```
+freeradius_users:
+  - name: mike
+    password: test_password
+    auth_type: Accept
+```
