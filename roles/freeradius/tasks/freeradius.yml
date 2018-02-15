@@ -1,10 +1,16 @@
 ---
-- name: Install freeradius packages
+- name: Install freeradius package
   apt:
     name:
       - freeradius
+    state: present
+
+- name: Install freeradius-ldap package
+  apt:
+    name:
       - freeradius-ldap
     state: present
+  when: ldap_server is defined
 
 - name: LDAP configuration file
   template:
@@ -13,7 +19,7 @@
     owner: freerad
     group: freerad
     mode: "0640"
-
+  when: ldap_server is defined
 
 - name: LDAP module link
   file:    
@@ -22,4 +28,5 @@
     owner: freerad
     group: freerad
     state: link
-#    force: yes
+  when: ldap_server is defined
+
