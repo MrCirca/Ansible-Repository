@@ -23,6 +23,7 @@ freeradius_clients:
   - name: radius_client_name
     ip_address: 192.168.1.0/24
     secret: password
+    nastype: other
 ```
 For Radius Users
 ```
