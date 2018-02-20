@@ -2,5 +2,7 @@
 client {{ radius_client.name }} {
         ipaddr  = {{radius_client.ip_address}}
         secret  = {{radius_client.secret}}
+        nastype = {{radius_client.type}}
+
         }
 {% endfor %}        
