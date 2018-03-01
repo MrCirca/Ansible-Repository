@@ -52,7 +52,7 @@
   template:
     src: storage.cfg.j2
     dest: /etc/pve/storage.cfg
-  when: inventory_hostname == groups[storage_type+'_nodes'][0]
+  when: inventory_hostname == groups[storage_type+'_nodes'][0] and proxmox_mount_volumes is defined
   tags:
     - proxmox-storage
 #

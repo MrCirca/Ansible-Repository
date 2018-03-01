@@ -1,0 +1,5 @@
+---
+- hosts: mikrotik_routers
+  roles:
+    - role: mikrotik
+  gather_facts: no
