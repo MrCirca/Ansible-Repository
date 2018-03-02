@@ -2,8 +2,13 @@
 - name: Enable Change of Authorization with Radius
   raw: /radius incoming set accept={{item.radius_incoming}} port={{item.radius_incoming_port}}; quit
   with_items: "{{mikrotik_radius_clients}}"
-
+  
 - name: Add Radius Client
-  raw: /radius add address={{item.radius_server_address}} secret={{item.radius_server_shared_secret}}; quit
+  raw: /radius add service={{item.radius_services}} address={{item.radius_server_address}} secret={{item.radius_server_shared_secret}}; quit
+  with_items: "{{mikrotik_radius_clients}}"
+
+
+- name: Add login Service
+  raw: /radius set numbers=0 service={{item.radius_service}}; quit
   with_items: "{{mikrotik_radius_clients}}"
 
