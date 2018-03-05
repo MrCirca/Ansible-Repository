@@ -2,13 +2,22 @@
 - name: Enable Change of Authorization with Radius
   raw: /radius incoming set accept={{item.radius_incoming}} port={{item.radius_incoming_port}}; quit
   with_items: "{{mikrotik_radius_clients}}"
+  tags: radius
   
 - name: Add Radius Client
   raw: /radius add service={{item.radius_services}} address={{item.radius_server_address}} secret={{item.radius_server_shared_secret}}; quit
   with_items: "{{mikrotik_radius_clients}}"
+  tags: radius
 
-
-- name: Add login Service
-  raw: /radius set numbers=0 service={{item.radius_service}}; quit
+- name: Users use radius
+  raw: /user aaa set use-radius={{item.use_radius}}; quit
   with_items: "{{mikrotik_radius_clients}}"
+  tags: radius
 
+#- name: Ping
+#  raw: ping count=2 8.8.8.8; quit
+#  tags: ping
+
+#- name: Enable SNMP
+#  raw: /snmp set enabled=yes; quit
+#  tags: snmp

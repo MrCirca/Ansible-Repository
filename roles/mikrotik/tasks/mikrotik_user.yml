@@ -1,0 +1,25 @@
+---
+- name: Print Mikrotik users
+  raw: /user print where name="{{item.mikrotik_user}}"; quit
+  register: output
+  with_items: {{mikrotik_users}}
+  tags:
+    - add_user
+    - change_password
+
+- name: Change user's password
+  raw: /user set password={{item.mikrotik_user_password}} {{item.mikrotik_user}}; quit
+  when: "'{{item.mikrotik_user}}' in output.stdout and {{item.mikrotik_user_password}} is
+  defined"
+  with_items: {{mikrotik_users}}
+  tags:
+    - change_password
+
+- name: Add user if does not exist
+  raw: /user add name={{item.mikrotik_user}} password={{item.mikrotik_user_password}}
+  group={{mikrotik_user_group}}; quit
+  when: "'{{item.mikrotik_user}}' not in output.stdout"
+  with_items: {{mikrotik_users}}
+  tags:
+    - add_user
+
