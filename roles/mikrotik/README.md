@@ -1,7 +1,7 @@
 Mikrotik Radius Client
 ======================
 
-Mikrotik Radius Client deployment tasks for Mikrotik Routers.
+RouterOS deployment tasks for Mikrotik Routers.
 
 Role Variables
 
