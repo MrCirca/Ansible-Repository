@@ -14,9 +14,9 @@
   with_items: "{{mikrotik_radius_clients}}"
   tags: radius
 
-#- name: Ping
-#  raw: ping count=2 8.8.8.8; quit
-#  tags: ping
+- name: Ping
+  raw: ping count=2 8.8.8.8; quit
+  tags: ping
 
 #- name: Enable SNMP
 #  raw: /snmp set enabled=yes; quit

@@ -1,25 +1,28 @@
 ---
 - name: Print Mikrotik users
-  raw: /user print where name="{{item.mikrotik_user}}"; quit
+  raw: /user print where count-only name="{{item.mikrotik_user}}"; quit
   register: output
-  with_items: {{mikrotik_users}}
+  with_items: "{{mikrotik_users}}"
   tags:
     - add_user
     - change_password
 
+- name: debug
+  debug:
+    msg: "{{ output.results[0].stdout | regex_replace('(\\x1B\\[[0-?]*[
+    -/]*[@-~]|\\x1B7|\\x1B8|\\r)', '') }}"
+
 - name: Change user's password
-  raw: /user set password={{item.mikrotik_user_password}} {{item.mikrotik_user}}; quit
-  when: "'{{item.mikrotik_user}}' in output.stdout and {{item.mikrotik_user_password}} is
-  defined"
-  with_items: {{mikrotik_users}}
+  raw: /user set password={{item.item.mikrotik_user_password}} {{item.item.mikrotik_user}}; quit
+  when: item.stdout_lines[2][-1] == "1" and item.item.mikrotik_user_password is defined
+  with_items: "{{output.results}}"
   tags:
     - change_password
 
 - name: Add user if does not exist
-  raw: /user add name={{item.mikrotik_user}} password={{item.mikrotik_user_password}}
-  group={{mikrotik_user_group}}; quit
-  when: "'{{item.mikrotik_user}}' not in output.stdout"
-  with_items: {{mikrotik_users}}
+  raw: /user add name={{item.item.mikrotik_user}} password={{item.item.mikrotik_user_password}} group={{item.item.mikrotik_user_group}}; quit
+  when: item.stdout_lines[2][-1] == "0"
+  with_items: "{{output.results}}"
   tags:
     - add_user
 
