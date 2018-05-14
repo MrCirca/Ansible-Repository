@@ -15,7 +15,6 @@ ldap_server_base_dn: "dc=example,dc=gr"
 ldap_user_password_attribute: userPassword
 ldap_people_group: "ou=People,dc=example,dc=gr"
 ldap_branch_group: "cn=support,ou=Groups,dc=example,dc=gr"
-ca_pub_path: /home/myCA.pem
 ```
 For Radius Clients
 ```
