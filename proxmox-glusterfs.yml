@@ -13,15 +13,15 @@
     - lvm
     - glusterfs
 
-#- hosts: "{{ storage_type+'_nodes' }}"
-#  roles:
-#    - role: filesystem
-#  tags:
-#    - filesystem 
-#    - glusterfs
+- hosts: "{{ storage_type+'_nodes' }}"
+  roles:
+    - role: filesystem
+  tags:
+    - filesystem 
+    - glusterfs
 
-#- hosts: "{{ storage_type+'_nodes' }}"
-#  roles:
-#    - role: glusterfs
-#  tags:
-#    - glusterfs
+- hosts: "{{ storage_type+'_nodes' }}"
+  roles:
+    - role: glusterfs
+  tags:
+    - glusterfs

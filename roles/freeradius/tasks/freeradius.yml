@@ -12,7 +12,7 @@
     state: present
   when: ldap_server is defined
 
-- name: LDAP configuration file
+- name: LDAP module configuration file
   template:
     src: ldap.j2
     dest: /etc/freeradius/3.0/mods-available/ldap
@@ -21,10 +21,35 @@
     mode: "0640"
   when: ldap_server is defined
 
+
+- name: EAP module configuration file
+  template:
+    src: eap.j2
+    dest: /etc/freeradius/3.0/mods-available/eap
+    owner: freerad
+    group: freerad
+    mode: "0640"
+  when: ldap_server is defined
+
+
 - name: LDAP module link
   file:    
-    src: ../mods-available/ldap
+    src: /etc/freeradius/3.0/mods-available/ldap
     dest: /etc/freeradius/3.0/mods-enabled/ldap
+    owner: freerad
+    group: freerad
+    state: link
+  when: ldap_server is defined
+
+- name: Remove EAP from mods-enabled if exists
+  file:
+    path: /etc/freeradius/3.0/mods-enabled/eap
+    state: absent
+
+- name: EAP module link
+  file:
+    src: /etc/freeradius/3.0/mods-available/eap
+    dest: /etc/freeradius/3.0/mods-enabled/eap
     owner: freerad
     group: freerad
     state: link
@@ -38,10 +63,14 @@
     group: freerad
     mode: "0640"
 
-- name: Freeradius users
-  template:
-    src: users.j2
-    dest: /etc/freeradius/3.0/users
-    owner: freerad
-    group: freerad
-    mode: "0640"
+- name: Generate diffie hellman file
+  openssl_dhparam:
+    path: /etc/freeradius/3.0/certs/dh
+    size: 2048
+#- name: Freeradius users
+#  template:
+#    src: users.j2
+#    dest: /etc/freeradius/3.0/users
+#    owner: freerad
+#    group: freerad
+#    mode: "0640"
