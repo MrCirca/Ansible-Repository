@@ -31,4 +31,6 @@ ldap_groups:
     vlan_number: 2
   - ldap_group_name: "cn=support,ou=Groups,dc=example,dc=gr"
     vlan_number: 3
+  - ldap_group_name: "cn=wireless,ou=Groups,dc=example,dc=gr"
+    wireless_vlan_number: 21
 ```
