@@ -9,12 +9,12 @@ Examples of variables used in this role:
 ```
 ldap_server: ldap-server
 ldap_server_port: 636
-ldap_server_identity: "cn=admin,dc=example,dc=gr"
-ldap_server_password: any_password_you_want
+ldap_server_identitydd: "cn=admin,dc=example,dc=gr"(optional)
+ldap_server_password: any_password_you_want (optional)
 ldap_server_base_dn: "dc=example,dc=gr"
 ldap_user_password_attribute: userPassword
 ldap_people_group: "ou=People,dc=example,dc=gr"
-ldap_branch_group: "cn=support,ou=Groups,dc=example,dc=gr"
+ldap_branch_group: "ou=Groups,dc=example,dc=gr"
 ```
 For Radius Clients
 ```
@@ -24,10 +24,11 @@ freeradius_clients:
     secret: password
     nastype: other
 ```
-For Radius Users
+For Radius Users - Groups
 ```
-freeradius_users:
-  - name: mike
-    password: test_password
-    auth_type: Accept
+ldap_groups:
+  - ldap_group_name: "cn=employees,ou=Groups,dc=example,dc=gr"
+    vlan_number: 2
+  - ldap_group_name: "cn=support,ou=Groups,dc=example,dc=gr"
+    vlan_number: 3
 ```
