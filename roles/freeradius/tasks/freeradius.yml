@@ -3,59 +3,60 @@
   apt:
     name:
       - freeradius
-    state: present
-
-- name: Install freeradius-ldap package
-  apt:
-    name:
       - freeradius-ldap
     state: present
-  when: ldap_server is defined
 
-- name: LDAP module configuration file
+- name: Create LDAP module configuration file
   template:
     src: ldap.j2
     dest: /etc/freeradius/3.0/mods-available/ldap
     owner: freerad
     group: freerad
     mode: "0640"
-  when: ldap_server is defined
 
-
-- name: EAP module configuration file
-  template:
-    src: eap.j2
+- name: Copy EAP module configuration file
+  copy:
+    src: eap
     dest: /etc/freeradius/3.0/mods-available/eap
     owner: freerad
     group: freerad
     mode: "0640"
-  when: ldap_server is defined
 
+- name: Enable freeradius modules
+  file:
+    src: /etc/freeradius/3.0/mods-available/{{ item }}
+    dest: /etc/freeradius/3.0/mods-enabled/{{ item }}
+    owner: freerad
+    group: freerad
+    follow: no
+    state: link
+  with_items:
+    - ldap
+    - eap
 
-- name: LDAP module link
-  file:    
-    src: /etc/freeradius/3.0/mods-available/ldap
-    dest: /etc/freeradius/3.0/mods-enabled/ldap
+- name: Copy site configurations
+  copy:    
+    src: "{{ item }}"
+    dest: /etc/freeradius/3.0/sites-available/{{ item }}
+    owner: freerad
+    group: freerad
+  with_items:
+    - default
+    - inner-tunnel
+
+- name: Enable sites
+  file:
+    src: /etc/freeradius/3.0/sites-available/{{ item }}
+    dest: /etc/freeradius/3.0/sites-enabled/{{ item }}
+    follow: no
     owner: freerad
     group: freerad
     state: link
-  when: ldap_server is defined
+  with_items:
+    - default
+    - inner-tunnel
 
-- name: Remove EAP from mods-enabled if exists
-  file:
-    path: /etc/freeradius/3.0/mods-enabled/eap
-    state: absent
-
-- name: EAP module link
-  file:
-    src: /etc/freeradius/3.0/mods-available/eap
-    dest: /etc/freeradius/3.0/mods-enabled/eap
-    owner: freerad
-    group: freerad
-    state: link
-  when: ldap_server is defined
-
-- name: Freeradius Clients
+- name: Create Freeradius Clients configuration
   template:
     src: clients.conf.j2
     dest: /etc/freeradius/3.0/clients.conf
@@ -67,6 +68,7 @@
   openssl_dhparam:
     path: /etc/freeradius/3.0/certs/dh
     size: 2048
+
 #- name: Freeradius users
 #  template:
 #    src: users.j2

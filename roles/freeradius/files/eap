@@ -24,7 +24,7 @@ eap {
 	#  then that EAP type takes precedence over the
 	#  default type configured here.
 	#
-	default_eap_type = "{{default_eap_type}}"
+	default_eap_type = ttls
 
 	#  A list is maintained to correlate EAP-Response
 	#  packets with EAP-Request packets.  After a
@@ -237,7 +237,7 @@ eap {
 		#
 		#  	openssl dhparam -out certs/dh 2048
 		#
-		dh_file = ${certdir}/dh
+		dh_file = /etc/freeradius/3.0/certs/dh
 		#
 		#  If your system doesn't have /dev/urandom,
 		#  you will need to create this file, and
@@ -594,7 +594,7 @@ eap {
 		#  EAP conversation, then this configuration entry is
 		#  ignored.
 		#
-		default_eap_type = "{{default_eap_type}}"
+		default_eap_type = ttls
 
 		#  The tunneled authentication request does not usually
 		#  contain useful attributes like 'Calling-Station-Id',
@@ -610,7 +610,7 @@ eap {
 		#
 		#  allowed values: {no, yes}
 		#
-		copy_request_to_tunnel = "{{copy_request_to_tunnel}}"
+		copy_request_to_tunnel = yes
 
 		#
 		#  As of version 3.0.5, this configuration item
@@ -633,7 +633,7 @@ eap {
 		#
 		#  allowed values: {no, yes}
 		#
-		use_tunneled_reply = "{{use_tunneled_reply}}"
+		use_tunneled_reply = yes
 
 		#
 		#  The inner tunneled request can be sent

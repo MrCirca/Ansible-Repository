@@ -21,12 +21,10 @@ ldap {
 #	server = 'ldap.rrdns.example.org'
 
 	#  Port to connect on, defaults to 389, will be ignored for LDAP URIs.
-	port = '{{ldap_server_port}}'
+	port = {{ldap_server_port}}
 
 	#  Administrator account for searching and possibly modifying.
 	#  If using SASL + KRB5 these should be commented out.
-	identity = '{{ldap_server_identity}}'
-	password = '{{ldap_server_password}}'
 
 	#  Unless overridden in another section, the dn from which all
 	#  searches will start from.
@@ -150,7 +148,7 @@ ldap {
 	#
 	user {
 		#  Where to start searching in the tree for users
-		base_dn = '{{ldap_people_group}}'
+		base_dn = "{{ldap_people_group}}"
 
 		#  Filter for user objects, should be specific enough
 		#  to identify a single user object.
