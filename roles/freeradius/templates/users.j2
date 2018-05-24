@@ -1,8 +1,13 @@
 {% for ldap_group in ldap_groups %}
 DEFAULT Ldap-Group == "{{ ldap_group.ldap_group_name }}"
-	Tunnnel-Type = VLAN,
+{% if ldap_group.vlan_number is defined %}
+	Tunnel-Type = VLAN,
 	Tunnel-Medium-Type = IEEE-802,
 	Tunnel-Private-Group-ID = {{ ldap_group.vlan_number }}
+{% elif ldap_group.wireless_vlan_number is defined %}
+	Mikrotik_Wireless_VLANID = {{ ldap_group.wireless_vlan_number }},
+{% endif %}
 	Fall-Through = Yes
 
 {% endfor %}
+
