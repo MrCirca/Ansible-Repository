@@ -115,9 +115,9 @@ authorize {
 	#  If you want the inner tunnel request to be proxied, delete
 	#  the next few lines.
 	#
-	update control {
-		&Proxy-To-Realm := LOCAL
-	}
+#	update control {
+#		&Proxy-To-Realm := LOCAL
+#	}
 
 	#
 	#  This module takes care of EAP-MSCHAPv2 authentication.
@@ -144,7 +144,7 @@ authorize {
 	#  is meant to mirror the "users" file.
 	#
 	#  See "Authorization Queries" in sql.conf
-	-sql
+#	-sql
 
 	#
 	#  If you are using /etc/smbpasswd, and are also doing
@@ -305,7 +305,7 @@ post-auth {
 	#  After authenticating the user, do another SQL query.
 	#
 	#  See "Authentication Logging Queries" in sql.conf
-	-sql
+#	-sql
 
 	#
 	#  Instead of sending the query to the SQL server,

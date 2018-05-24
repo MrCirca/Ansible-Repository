@@ -69,10 +69,10 @@
     path: /etc/freeradius/3.0/certs/dh
     size: 2048
 
-#- name: Freeradius users
-#  template:
-#    src: users.j2
-#    dest: /etc/freeradius/3.0/users
-#    owner: freerad
-#    group: freerad
-#    mode: "0640"
+- name: Create Freeradius users file
+  template:
+    src: users.j2
+    dest: /etc/freeradius/3.0/users
+    owner: freerad
+    group: freerad
+    mode: "0640"

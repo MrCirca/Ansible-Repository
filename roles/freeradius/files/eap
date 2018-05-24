@@ -136,7 +136,7 @@ eap {
 		#  configured for the request, and do the
 		#  authentication itself.
 		#
-		auth_type = PAP
+		#auth_type = PAP
 	}
 
 	## Common TLS configuration for TLS-based EAP types
@@ -199,7 +199,6 @@ eap {
 
 	 	#  OpenSSL will automatically create certificate chains,
 	 	#  unless we tell it to not do that.  The problem is that
-	 	#  u
 	 	#  it sometimes gets the chains right from a certificate
 	 	#  signature view, but wrong from the clients view.
 		#
@@ -238,6 +237,7 @@ eap {
 		#  	openssl dhparam -out certs/dh 2048
 		#
 		dh_file = /etc/freeradius/3.0/certs/dh
+
 		#
 		#  If your system doesn't have /dev/urandom,
 		#  you will need to create this file, and

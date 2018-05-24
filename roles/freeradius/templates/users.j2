@@ -1,8 +1,8 @@
-{% for radius_user in freeradius_users %}
-{{ radius_user.name }}  Cleartext-Password := "{{radius_user.password}}"
-                   Auth-Type:= {{ radius_user.auth_type}}
+{% for ldap_group in ldap_groups %}
+DEFAULT Ldap-Group == "{{ ldap_group.ldap_group_name }}"
+	Tunnnel-Type = VLAN,
+	Tunnel-Medium-Type = IEEE-802,
+	Tunnel-Private-Group-ID = {{ ldap_group.vlan_number }}
+	Fall-Through = Yes
 
 {% endfor %}
-
-
-
