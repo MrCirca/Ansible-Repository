@@ -34,3 +34,14 @@ ldap_groups:
   - ldap_group_name: "cn=wireless,ou=Groups,dc=example,dc=gr"
     wireless_vlan_number: 21
 ```
+For Freeradius Proxy Server
+```
+radius_servers:
+  - name: radius1
+    ip: 10.10.10.47
+    secret: test123
+  - name: radius2
+    ip: 10.10.10.45
+    secret: test123
+
+```
