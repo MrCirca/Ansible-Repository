@@ -116,7 +116,7 @@ home_server {{ radius_server.name }} {
     type = auth
     ipaddr = {{ radius_server.ip }}
     port = 1812
-    secret = {{ radius_server.shared_secret }}
+    secret = {{ radius_server.secret }}
     num_answers_to_alive = 3
     status_check = status-server
     revive_interval = 120

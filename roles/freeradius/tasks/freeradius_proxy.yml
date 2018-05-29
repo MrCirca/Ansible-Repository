@@ -1,0 +1,8 @@
+---
+- name: Create Freeradius proxy configuration file
+  template:
+    src: proxy.conf.j2
+    dest: /etc/freeradius/3.0/proxy.conf
+    owner: freerad
+    group: freerad
+    mode: "0640"                                                  
