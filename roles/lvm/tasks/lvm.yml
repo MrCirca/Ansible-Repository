@@ -5,6 +5,7 @@
     pvs: "{{lvm_volume_groups[item].physical_volumes }}"
   with_items: "{{ lvm_volume_groups }}"
   tags:
+    - lvm
     - volume_groups
 
 - name: Create thin-pools
@@ -15,17 +16,25 @@
     opts: -T
   with_items: "{{ lvm_thin_pools }}"
   when: lvm_thin_pools is defined
+  tags:
+    - lvm
+    - thin-pools
 
 - name: Check if thin_volume exists
   shell: lvs | grep -E -c '^\s+{{ item }}\s' | cut -d " " -f 3
   register: thin_volume_exist
   with_items: "{{ lvm_thin_volumes }}"
   when: lvm_thin_volumes is defined
+  tags:
+    - lvm
 
 - name: Create thin volume
   command: lvcreate -V {{ lvm_thin_volumes[item.item].size}} -T -n {{ item.item }} {{ lvm_thin_volumes[item.item].vg }}/{{ lvm_thin_volumes[item.item].thin_pool }}
   with_items: "{{ thin_volume_exist.results }}"
   when: item.stdout == "0" and thin_volume_exist is defined
+  tags:
+    - lvm
+    - thin_volumes
 
 - name: Create logical volumes 
   lvol:
@@ -34,3 +43,6 @@
     opts: -V{{ lvm_logical_volumes[item].size }} -T {{ lvm_logical_volumes[item].vg }}
   with_items: "{{ lvm_logical_volumes }}"
   when: lvm_logical_volumes is defined
+  tags:
+    - lvm
+    - logical_volumes
