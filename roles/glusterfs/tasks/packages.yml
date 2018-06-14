@@ -6,11 +6,13 @@
   tags:
     - packages
     - gpg_key
+    - apt-transport-https
 
 - name: Add Glusterfs source repository
   apt_repository:
     repo: "deb [arch=amd64] https://download.gluster.org/pub/gluster/glusterfs/3.12/LATEST/Debian/stretch/amd64/apt stretch main"
     state: present
+    filename: gluster
   tags:
     - packages
     - source_repository
