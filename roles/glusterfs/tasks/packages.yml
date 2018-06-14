@@ -1,4 +1,9 @@
 ---
+- name: Install apt-transport-https for sources with https
+  apt:
+    name: apt-transport-https
+    state: present
+
 - name: Download GPG key to apt 
   apt_key:
     url: "{{ repo_key_url }}"
@@ -15,15 +20,6 @@
   tags:
     - packages
     - source_repository
-
-- name: Install apt-transport-https for sources with https
-  apt:
-    name:
-      - apt-transport-https
-    state: present
-  tags:
-    - packages
-
 
 - name: Update repository packages
   apt:
