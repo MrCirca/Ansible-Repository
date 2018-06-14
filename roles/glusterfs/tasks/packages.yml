@@ -1,12 +1,11 @@
 ---
 - name: Download GPG key to apt 
-  apt_key: 
+  apt_key:
     url: "{{ repo_key_url }}"
     state: present
   tags:
     - packages
     - gpg_key
-    - apt-transport-https
 
 - name: Add Glusterfs source repository
   apt_repository:
@@ -16,6 +15,15 @@
   tags:
     - packages
     - source_repository
+
+- name: Install apt-transport-https for sources with https
+  apt:
+    name:
+      - apt-transport-https
+    state: present
+  tags:
+    - packages
+
 
 - name: Update repository packages
   apt:
