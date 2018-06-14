@@ -1,0 +1,3 @@
+---
+repo_key_url: https://download.gluster.org/pub/gluster/glusterfs/3.12/rsa.pub
+repo: deb [arch=amd64] https://download.gluster.org/pub/gluster/glusterfs/3.12/LATEST/Debian/stretch/amd64/apt stretch main

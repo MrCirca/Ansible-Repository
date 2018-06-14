@@ -1,7 +1,7 @@
 ---
 - name: Download GPG key to apt 
   apt_key: 
-    url: "https://download.gluster.org/pub/gluster/glusterfs/3.12/rsa.pub"
+    url: "{{ repo_key_url }}"
     state: present
   tags:
     - packages
@@ -10,7 +10,7 @@
 
 - name: Add Glusterfs source repository
   apt_repository:
-    repo: "deb [arch=amd64] https://download.gluster.org/pub/gluster/glusterfs/3.12/LATEST/Debian/stretch/amd64/apt stretch main"
+    repo: "{{ repo }}"
     state: present
     filename: gluster
   tags:
