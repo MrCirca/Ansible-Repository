@@ -28,6 +28,6 @@
     - create_bricks
 
 - name: Mount the line added in fstab
-  shell: mount -a
+  command: mount -a
   tags:
     - filesystem

@@ -1,0 +1,31 @@
+---
+- name: Download GPG key to apt 
+  apt_key: 
+    url: "https://download.gluster.org/pub/gluster/glusterfs/3.12/rsa.pub"
+    state: present
+  tags:
+    - packages
+    - gpg_key
+
+- name: Add Glusterfs source repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.gluster.org/pub/gluster/glusterfs/3.12/LATEST/Debian/stretch/amd64/apt stretch main"
+    state: present
+  tags:
+    - packages
+    - source_repository
+
+- name: Update repository packages
+  apt:
+    update_cache: yes
+  tags:
+    - packages
+
+- name: Install GlusterFS server 
+  apt:
+    name:
+      - glusterfs-server
+      - git
+    state: present
+  tags:
+    - packages

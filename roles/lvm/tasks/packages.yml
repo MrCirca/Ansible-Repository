@@ -8,5 +8,4 @@
     - lvm2
     - thin-provisioning-tools
   tags:
-    - packages
-~                   
+    - packages                   

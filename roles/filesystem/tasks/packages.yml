@@ -1,0 +1,10 @@
+---
+- name: Install xfsprogs package for xfs filesystem
+  apt:
+    update_cache: yes
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - xfsprogs
+  tags:
+    - packages       
