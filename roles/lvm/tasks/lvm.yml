@@ -28,13 +28,14 @@
   tags:
     - lvm
 
+    
 - name: Create thin volume
   command: lvcreate -V {{ lvm_thin_volumes[item.item].size}} -T -n {{ item.item }} {{ lvm_thin_volumes[item.item].vg }}/{{ lvm_thin_volumes[item.item].thin_pool }}
   with_items: "{{ thin_volume_exist.results }}"
-  when: item.stdout == "0" and thin_volume_exist is defined
+  when: lvm_thin_volumes is defined and item.stdout == "0"
   tags:
     - lvm
-    - thin_volumes
+    - thin_volume
 
 - name: Create logical volumes 
   lvol:
