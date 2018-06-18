@@ -1,5 +1,5 @@
 ---
-- name: Install lvm2 andi thin-provisioning-tools packages
+- name: Install lvm2 and thin-provisioning-tools packages
   apt:
     update_cache: yes
     pkg: "{{ item }}"

@@ -40,7 +40,7 @@
   lvol:
     vg: "{{ lvm_logical_volumes[item].vg }}"
     lv: "{{ item }}"
-    opts: -V{{ lvm_logical_volumes[item].size }} -T {{ lvm_logical_volumes[item].vg }}
+    size: "{{ lvm_logical_volumes[item].size }}"
   with_items: "{{ lvm_logical_volumes }}"
   when: lvm_logical_volumes is defined
   tags:
